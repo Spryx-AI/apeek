@@ -102,7 +102,7 @@ describe("CLI integration", () => {
       ["schema", "Deal", "--source", join(FIXTURES, "spryx-sample.json")],
       env,
     );
-    expect(r.status).toBe(0);
+    expect(r.status, `stderr: ${r.stderr}\nstdout: ${r.stdout}`).toBe(0);
     expect(r.stdout).toContain("# schema Deal");
     expect(r.stdout).toContain("| id | string | yes |");
   });
