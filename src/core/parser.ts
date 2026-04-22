@@ -118,7 +118,7 @@ function normalize(doc: UnknownRecord): NormalizedSpec {
           path,
           op,
           sharedParams,
-          asSecurity(securityNode) /* global fallback */,
+          asSecurity(securityNode),
         ),
       );
     }
