@@ -72,18 +72,19 @@ describe("CLI against OpenAI's real OpenAPI spec (126 ops, 436 schemas)", () => 
     expect(r.stdout).toContain("POST /embeddings");
   });
 
-  it("op POST /chat/completions renders the heading, tags, auth, request body and responses", () => {
+  it("op POST /chat/completions renders composition + response schema name", () => {
     const r = runCli(["op", "POST", "/chat/completions", "--source", OPENAI_SPEC], sandbox);
     expect(r.status, `stderr: ${r.stderr}`).toBe(0);
     expect(r.stdout).toContain("# POST /chat/completions");
     expect(r.stdout).toContain("**Tags:**");
     expect(r.stdout).toContain("**Auth:**");
-    expect(r.stdout).toContain("## Request body");
-    expect(r.stdout).toContain("## Responses");
-    // Known v0.2 limitation: composed schemas (oneOf/allOf at request-body
-    // root) are not flattened, so the property table for composition-heavy
-    // ops like CreateChatCompletionRequest is empty. The ones we assert
-    // above are what the v0.1 formatter is contractually expected to render.
+    // Request body uses allOf; the formatter should render composition and
+    // suggest drilling into the named variant instead of showing an empty
+    // section.
+    expect(r.stdout).toMatch(/(One of|All of|Any of):/);
+    expect(r.stdout).toContain("apeek schema CreateModelResponseProperties");
+    // Response schema name surfaces instead of 'object'
+    expect(r.stdout).toContain("- **200** `CreateChatCompletionResponse`");
   });
 
   it("op GET /models/{model} accepts path templates literally (no substitution)", () => {

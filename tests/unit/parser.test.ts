@@ -122,8 +122,56 @@ describe("parseSpec", () => {
     };
     const parsed = await parseSpec(spec);
     expect(parsed.schemas["Node"]).toBeDefined();
-    // The cyclic slot should be marked rather than recursed into
+    // The cyclic slot should be marked rather than recursed into, and when
+    // the cycle closes at a named component the marker names it so the
+    // agent can drill in.
     const childItems = parsed.schemas["Node"]?.properties?.["children"]?.items;
-    expect(childItems?.description).toBe("[cyclic reference]");
+    expect(childItems?.name).toBe("Node");
+    expect(childItems?.description).toContain("[cyclic reference");
+    expect(childItems?.description).toContain("Node");
+  });
+
+  it("preserves component schema names on response and request-body references", async () => {
+    const spec = await parseSpec(await loadSpryx());
+    const createDeal = spec.operations.find((op) => op.operationId === "createDeal");
+    expect(createDeal?.requestBody?.schema?.name).toBe("DealCreate");
+    const ok = createDeal?.responses.find((r) => r.status === "201");
+    expect(ok?.schema?.name).toBe("Deal");
+    const err = createDeal?.responses.find((r) => r.status === "400");
+    expect(err?.schema?.name).toBe("Error");
+  });
+
+  it("captures oneOf composition on request body schemas", async () => {
+    const variantA = { type: "object", properties: { kind: { type: "string", enum: ["a"] } } };
+    const variantB = { type: "object", properties: { kind: { type: "string", enum: ["b"] } } };
+    const spec = {
+      openapi: "3.0.0",
+      info: { title: "composed", version: "1" },
+      paths: {
+        "/x": {
+          post: {
+            operationId: "postX",
+            requestBody: {
+              required: true,
+              content: {
+                "application/json": {
+                  schema: { oneOf: [variantA, variantB] },
+                },
+              },
+            },
+            responses: { "200": { description: "OK" } },
+          },
+        },
+      },
+      components: { schemas: { VariantA: variantA, VariantB: variantB } },
+    };
+    const parsed = await parseSpec(spec);
+    const op = parsed.operations[0];
+    const bodySchema = op?.requestBody?.schema;
+    expect(bodySchema?.oneOf).toBeDefined();
+    expect(bodySchema?.oneOf?.length).toBe(2);
+    const names = bodySchema?.oneOf?.map((v) => v.name);
+    expect(names).toContain("VariantA");
+    expect(names).toContain("VariantB");
   });
 });

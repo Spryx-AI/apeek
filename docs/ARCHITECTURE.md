@@ -89,10 +89,6 @@ Targets (measured with `hyperfine`; baselines captured at v0.1 release):
 
 Tactics: lazy imports of heavy deps (parser, indexer, js-yaml) so `--version` and the first-run welcome never load them; cache warm path deserializes `spec.json` + `index.json` directly and never touches `@readme/openapi-parser`.
 
-## Known limitations (v0.1)
-
-- **Composed request-body schemas not flattened.** When an operation's request body uses `oneOf` / `allOf` / `anyOf` at the root (rather than a flat `type: object` with `properties`), the parser's `toSchemaInfo` reads no properties and the markdown formatter renders an empty `## Request body` section with just the media type. Examples in the wild: the OpenAI API's `CreateChatCompletionRequest`. Tracked as a v0.2 improvement — fix is to flatten the first variant or render "one of: <variants>" similar to how enums are rendered. Exercised (and intentionally tolerated) in `tests/integration/real-spec.test.ts`.
-
 ## Module boundaries (summary)
 
 | Path | Purpose |

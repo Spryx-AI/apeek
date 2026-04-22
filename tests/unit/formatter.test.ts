@@ -133,6 +133,82 @@ describe("markdown renderer", () => {
     expect(out).toContain("Results: 0");
     expect(out).not.toContain("## 1.");
   });
+
+  it("does not emit Relevance scores (BM25 noise for agents)", async () => {
+    const spec = await loadSpryxSpec();
+    const op = findOperation(spec, (o) => o.operationId === "createDeal");
+    const out = selectRenderer("markdown").renderSearch({
+      query: "deal",
+      source: source(),
+      results: [{ kind: "operation", operation: op, score: 42.7 }],
+    });
+    expect(out).not.toContain("Relevance");
+    expect(out).not.toContain("42.7");
+  });
+
+  it("responses name the schema rather than emitting 'object'", async () => {
+    const spec = await loadSpryxSpec();
+    const op = findOperation(spec, (o) => o.operationId === "createDeal");
+    const out = selectRenderer("markdown").renderOp({ source: source(), operation: op });
+    expect(out).toContain("- **201** `Deal`");
+    expect(out).toContain("- **400** `Error`");
+    // Before the fix this said '- **201** object — Created'; assert the
+    // regression doesn't come back.
+    expect(out).not.toMatch(/- \*\*201\*\* object /);
+  });
+
+  it("request body names the component schema for non-composed bodies", async () => {
+    const spec = await loadSpryxSpec();
+    const op = findOperation(spec, (o) => o.operationId === "createDeal");
+    const out = selectRenderer("markdown").renderOp({ source: source(), operation: op });
+    expect(out).toContain("Schema: `DealCreate`");
+  });
+
+  it("renders oneOf composition with drill-in suggestion", () => {
+    const renderer = selectRenderer("markdown");
+    const out = renderer.renderOp({
+      source: source(),
+      operation: {
+        method: "POST",
+        path: "/x",
+        tags: ["x"],
+        parameters: [],
+        security: [],
+        responses: [],
+        requestBody: {
+          required: true,
+          mediaType: "application/json",
+          schema: {
+            oneOf: [
+              { name: "VariantA", type: "object" },
+              { name: "VariantB", type: "object" },
+            ],
+          },
+        },
+      },
+    });
+    expect(out).toContain("One of: `VariantA` | `VariantB`");
+    expect(out).toContain("apeek schema VariantA");
+    expect(out).toContain("apeek schema VariantB");
+  });
+
+  it("skips Tags/Auth lines when empty instead of emitting dashes", () => {
+    const renderer = selectRenderer("markdown");
+    const out = renderer.renderOp({
+      source: source(),
+      operation: {
+        method: "GET",
+        path: "/health",
+        summary: "Healthcheck",
+        tags: [],
+        parameters: [],
+        security: [],
+        responses: [{ status: "200", description: "OK" }],
+      },
+    });
+    expect(out).not.toContain("**Tags:**");
+    expect(out).not.toContain("**Auth:**");
+  });
 });
 
 describe("json renderer", () => {

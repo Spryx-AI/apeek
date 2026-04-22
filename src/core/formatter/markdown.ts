@@ -27,10 +27,6 @@ function authLine(security: readonly SecurityRequirement[]): string {
     .join(", ");
 }
 
-function tagsLine(tags: readonly string[]): string {
-  return tags.length > 0 ? tags.join(", ") : "—";
-}
-
 function schemaTypeLabel(schema: SchemaInfo | undefined): string {
   if (schema === undefined) return "";
   if (schema.type !== undefined && schema.format !== undefined) {
@@ -82,20 +78,80 @@ function renderRequestBody(body: RequestBodyInfo | undefined): string {
   if (body === undefined) return "";
   const out: string[] = ["", `## Request body (${body.mediaType})`, ""];
   if (body.schema !== undefined) {
+    const composition = renderComposition(body.schema);
+    if (composition !== "") {
+      out.push(composition);
+      return out.join("\n");
+    }
+    if (body.schema.name !== undefined) {
+      out.push(`Schema: \`${body.schema.name}\``);
+      out.push("");
+    }
     const propTable = renderPropertyTable(body.schema);
     if (propTable !== "") out.push(propTable);
-    else if (body.schema.type !== undefined) {
+    else if (body.schema.name === undefined && body.schema.type !== undefined) {
       out.push(`Type: \`${schemaTypeLabel(body.schema)}\``);
     }
   }
   return out.join("\n");
 }
 
+function renderComposition(schema: SchemaInfo): string {
+  const kind = schema.oneOf !== undefined
+    ? { label: "one of", variants: schema.oneOf }
+    : schema.anyOf !== undefined
+      ? { label: "any of", variants: schema.anyOf }
+      : schema.allOf !== undefined
+        ? { label: "all of", variants: schema.allOf }
+        : undefined;
+  if (kind === undefined) return "";
+  const labels = kind.variants.map((v, i) => {
+    if (v.name !== undefined) return `\`${v.name}\``;
+    if (v.type !== undefined) return `${v.type}`;
+    return `variant${i + 1}`;
+  });
+  const namedVariants = kind.variants
+    .map((v) => v.name)
+    .filter((n): n is string => n !== undefined);
+  const lines: string[] = [`${capitalize(kind.label)}: ${labels.join(" | ")}`];
+  if (namedVariants.length > 0) {
+    lines.push("");
+    lines.push(
+      `Drill into a variant: ${namedVariants
+        .slice(0, 3)
+        .map((n) => `\`apeek schema ${n}\``)
+        .join(", ")}`,
+    );
+  }
+  return lines.join("\n");
+}
+
+function capitalize(s: string): string {
+  return s.length === 0 ? s : s[0]!.toUpperCase() + s.slice(1);
+}
+
+function responseSchemaLabel(schema: SchemaInfo | undefined): string {
+  if (schema === undefined) return "";
+  if (schema.name !== undefined) return `\`${schema.name}\``;
+  if (schema.oneOf !== undefined || schema.anyOf !== undefined || schema.allOf !== undefined) {
+    return "(composed)";
+  }
+  if (schema.type === "array" && schema.items?.name !== undefined) {
+    return `\`${schema.items.name}[]\``;
+  }
+  return schema.type ?? "";
+}
+
 function renderResponses(responses: readonly ResponseInfo[]): string {
   if (responses.length === 0) return "";
-  const rows = responses.map(
-    (r) => `- **${r.status}** ${r.schema?.type ?? r.schema?.description ?? ""} — ${r.description ?? ""}`.replace(/\s+$/, ""),
-  );
+  const rows = responses.map((r) => {
+    const label = responseSchemaLabel(r.schema);
+    const desc = r.description ?? "";
+    const parts = [`**${r.status}**`];
+    if (label !== "") parts.push(label);
+    if (desc !== "") parts.push(`— ${desc}`);
+    return `- ${parts.join(" ")}`;
+  });
   return ["", "## Responses", "", ...rows].join("\n");
 }
 
@@ -109,8 +165,8 @@ function renderOperation(op: NormalizedOperation): string {
   const header = `# ${op.method} ${op.path}`;
   const lines: string[] = [header, ""];
   if (op.summary !== undefined) lines.push(`**Summary:** ${op.summary}`);
-  lines.push(`**Tags:** ${tagsLine(op.tags)}`);
-  lines.push(`**Auth:** ${authLine(op.security)}`);
+  if (op.tags.length > 0) lines.push(`**Tags:** ${op.tags.join(", ")}`);
+  if (op.security.length > 0) lines.push(`**Auth:** ${authLine(op.security)}`);
   if (op.description !== undefined) lines.push("", op.description);
   const params = renderParameters(op.parameters);
   if (params !== "") lines.push(params);
@@ -138,9 +194,8 @@ function renderSearchItem(item: SearchResultItem, index: number): string {
     const heading = `## ${index}. ${op.method} ${op.path}${op.summary !== undefined ? ` — ${op.summary}` : ""}`;
     const lines: string[] = [heading, ""];
     if (op.description !== undefined) lines.push(op.description, "");
-    lines.push(`Tags: ${tagsLine(op.tags)}`);
-    lines.push(`Auth: ${authLine(op.security)}`);
-    lines.push(`Relevance: ${item.score.toFixed(2)}`);
+    if (op.tags.length > 0) lines.push(`Tags: ${op.tags.join(", ")}`);
+    if (op.security.length > 0) lines.push(`Auth: ${authLine(op.security)}`);
     lines.push("");
     lines.push(`Get details: \`apeek op ${op.method} ${op.path}\``);
     return lines.join("\n");
@@ -149,8 +204,6 @@ function renderSearchItem(item: SearchResultItem, index: number): string {
   const heading = `## ${index}. schema ${s.name}`;
   const lines: string[] = [heading, ""];
   if (s.description !== undefined) lines.push(s.description, "");
-  lines.push(`Relevance: ${item.score.toFixed(2)}`);
-  lines.push("");
   lines.push(`Get details: \`apeek schema ${s.name}\``);
   return lines.join("\n");
 }

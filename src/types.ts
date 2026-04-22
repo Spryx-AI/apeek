@@ -32,6 +32,9 @@ export interface SchemaInfo {
   readonly properties?: Readonly<Record<string, SchemaInfo>>;
   readonly items?: SchemaInfo;
   readonly nullable?: boolean;
+  readonly oneOf?: readonly SchemaInfo[];
+  readonly anyOf?: readonly SchemaInfo[];
+  readonly allOf?: readonly SchemaInfo[];
 }
 
 export interface RequestBodyInfo {

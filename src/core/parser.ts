@@ -105,10 +105,20 @@ function normalize(doc: UnknownRecord): NormalizedSpec {
   const securityNode = Array.isArray(doc["security"]) ? doc["security"] : [];
   const tagsNode = Array.isArray(doc["tags"]) ? doc["tags"] : [];
 
+  // Build a reverse map from dereferenced schema objects to their component
+  // names. Since @readme/openapi-parser dereferences by reference, the same
+  // object we see at components.schemas.Foo is the one appearing at every
+  // $ref target. This lets us recover 'Foo' on request bodies, responses,
+  // and parameters even though the raw $ref string was consumed.
+  const schemaNames = new WeakMap<object, string>();
+  for (const [name, schema] of Object.entries(schemasNode)) {
+    if (isRecord(schema)) schemaNames.set(schema, name);
+  }
+
   const operations: NormalizedOperation[] = [];
   for (const [path, pathItem] of Object.entries(paths)) {
     if (!isRecord(pathItem)) continue;
-    const sharedParams = parseParameters(pathItem["parameters"]);
+    const sharedParams = parseParameters(pathItem["parameters"], schemaNames);
     for (const method of HTTP_METHODS) {
       const op = pathItem[method];
       if (!isRecord(op)) continue;
@@ -119,6 +129,7 @@ function normalize(doc: UnknownRecord): NormalizedSpec {
           op,
           sharedParams,
           asSecurity(securityNode),
+          schemaNames,
         ),
       );
     }
@@ -127,7 +138,7 @@ function normalize(doc: UnknownRecord): NormalizedSpec {
   const schemas: Record<string, NormalizedSchema> = {};
   for (const [name, schema] of Object.entries(schemasNode)) {
     if (!isRecord(schema)) continue;
-    schemas[name] = { name, ...toSchemaInfo(schema, new Set()) };
+    schemas[name] = { ...toSchemaInfo(schema, new Set(), schemaNames), name };
   }
 
   const tags: Record<string, string | undefined> = {};
@@ -161,14 +172,15 @@ function buildOperation(
   op: UnknownRecord,
   sharedParams: readonly ParameterInfo[],
   globalSecurity: readonly SecurityRequirement[],
+  schemaNames: WeakMap<object, string>,
 ): NormalizedOperation {
-  const localParams = parseParameters(op["parameters"]);
+  const localParams = parseParameters(op["parameters"], schemaNames);
   const mergedParams = mergeParameters(sharedParams, localParams);
-  const responses = parseResponses(op["responses"]);
+  const responses = parseResponses(op["responses"], schemaNames);
   const security = Array.isArray(op["security"])
     ? asSecurity(op["security"])
     : globalSecurity;
-  const body = parseRequestBody(op["requestBody"]);
+  const body = parseRequestBody(op["requestBody"], schemaNames);
 
   const result: NormalizedOperation = {
     method: method.toUpperCase() as NormalizedOperation["method"],
@@ -189,7 +201,10 @@ function buildOperation(
   return result;
 }
 
-function parseParameters(node: unknown): ParameterInfo[] {
+function parseParameters(
+  node: unknown,
+  schemaNames: WeakMap<object, string>,
+): ParameterInfo[] {
   if (!Array.isArray(node)) return [];
   const out: ParameterInfo[] = [];
   for (const entry of node) {
@@ -198,7 +213,9 @@ function parseParameters(node: unknown): ParameterInfo[] {
     const loc = asString(entry["in"]);
     if (name === undefined || loc === undefined) continue;
     if (!["query", "header", "path", "cookie"].includes(loc)) continue;
-    const schema = isRecord(entry["schema"]) ? toSchemaInfo(entry["schema"], new Set()) : undefined;
+    const schema = isRecord(entry["schema"])
+      ? toSchemaInfo(entry["schema"], new Set(), schemaNames)
+      : undefined;
     const param: ParameterInfo = {
       name,
       in: loc as ParameterInfo["in"],
@@ -223,13 +240,18 @@ function mergeParameters(
   return Array.from(keyed.values());
 }
 
-function parseRequestBody(node: unknown): RequestBodyInfo | undefined {
+function parseRequestBody(
+  node: unknown,
+  schemaNames: WeakMap<object, string>,
+): RequestBodyInfo | undefined {
   if (!isRecord(node)) return undefined;
   const content = isRecord(node["content"]) ? node["content"] : undefined;
   if (content === undefined) return undefined;
   const [mediaType, mediaNode] = Object.entries(content)[0] ?? [];
   if (mediaType === undefined || !isRecord(mediaNode)) return undefined;
-  const schema = isRecord(mediaNode["schema"]) ? toSchemaInfo(mediaNode["schema"], new Set()) : undefined;
+  const schema = isRecord(mediaNode["schema"])
+    ? toSchemaInfo(mediaNode["schema"], new Set(), schemaNames)
+    : undefined;
   const body: RequestBodyInfo = {
     required: node["required"] === true,
     mediaType,
@@ -239,7 +261,10 @@ function parseRequestBody(node: unknown): RequestBodyInfo | undefined {
   return body;
 }
 
-function parseResponses(node: unknown): ResponseInfo[] {
+function parseResponses(
+  node: unknown,
+  schemaNames: WeakMap<object, string>,
+): ResponseInfo[] {
   if (!isRecord(node)) return [];
   const out: ResponseInfo[] = [];
   for (const [status, value] of Object.entries(node)) {
@@ -249,7 +274,7 @@ function parseResponses(node: unknown): ResponseInfo[] {
     if (content !== undefined) {
       const firstMedia = Object.values(content)[0];
       if (isRecord(firstMedia) && isRecord(firstMedia["schema"])) {
-        schema = toSchemaInfo(firstMedia["schema"], new Set());
+        schema = toSchemaInfo(firstMedia["schema"], new Set(), schemaNames);
       }
     }
     const entry: ResponseInfo = {
@@ -276,12 +301,24 @@ function asSecurity(node: unknown): SecurityRequirement[] {
   return out;
 }
 
-function toSchemaInfo(node: UnknownRecord, ancestors: Set<object>): SchemaInfo {
+function toSchemaInfo(
+  node: UnknownRecord,
+  ancestors: Set<object>,
+  schemaNames: WeakMap<object, string>,
+): SchemaInfo {
   if (ancestors.has(node)) {
+    // On cyclic re-entry, surface the component name if we know it so the
+    // agent can jump to 'apeek schema <name>' rather than staring at a dead
+    // '[cyclic reference]' marker.
+    const cyclicName = schemaNames.get(node);
+    if (cyclicName !== undefined) {
+      return { name: cyclicName, description: `[cyclic reference — see schema ${cyclicName}]` };
+    }
     return { description: "[cyclic reference]" };
   }
   ancestors.add(node);
   try {
+    const name = schemaNames.get(node);
     const type = asString(node["type"]);
     const format = asString(node["format"]);
     const description = asString(node["description"]);
@@ -297,13 +334,17 @@ function toSchemaInfo(node: UnknownRecord, ancestors: Set<object>): SchemaInfo {
       : undefined;
     const required = asStringArray(node["required"]);
     const properties = isRecord(node["properties"])
-      ? toProperties(node["properties"], ancestors)
+      ? toProperties(node["properties"], ancestors, schemaNames)
       : undefined;
     const items = isRecord(node["items"])
-      ? toSchemaInfo(node["items"], ancestors)
+      ? toSchemaInfo(node["items"], ancestors, schemaNames)
       : undefined;
+    const oneOf = readVariants(node["oneOf"], ancestors, schemaNames);
+    const anyOf = readVariants(node["anyOf"], ancestors, schemaNames);
+    const allOf = readVariants(node["allOf"], ancestors, schemaNames);
 
     const result: SchemaInfo = {
+      ...(name !== undefined ? { name } : {}),
       ...(type !== undefined ? { type } : {}),
       ...(format !== undefined ? { format } : {}),
       ...(description !== undefined ? { description } : {}),
@@ -312,6 +353,9 @@ function toSchemaInfo(node: UnknownRecord, ancestors: Set<object>): SchemaInfo {
       ...(properties !== undefined ? { properties } : {}),
       ...(items !== undefined ? { items } : {}),
       ...(nullable !== undefined ? { nullable } : {}),
+      ...(oneOf !== undefined ? { oneOf } : {}),
+      ...(anyOf !== undefined ? { anyOf } : {}),
+      ...(allOf !== undefined ? { allOf } : {}),
     };
     return result;
   } finally {
@@ -319,11 +363,28 @@ function toSchemaInfo(node: UnknownRecord, ancestors: Set<object>): SchemaInfo {
   }
 }
 
-function toProperties(node: UnknownRecord, ancestors: Set<object>): Record<string, SchemaInfo> {
+function readVariants(
+  value: unknown,
+  ancestors: Set<object>,
+  schemaNames: WeakMap<object, string>,
+): readonly SchemaInfo[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const out: SchemaInfo[] = [];
+  for (const v of value) {
+    if (isRecord(v)) out.push(toSchemaInfo(v, ancestors, schemaNames));
+  }
+  return out.length > 0 ? out : undefined;
+}
+
+function toProperties(
+  node: UnknownRecord,
+  ancestors: Set<object>,
+  schemaNames: WeakMap<object, string>,
+): Record<string, SchemaInfo> {
   const out: Record<string, SchemaInfo> = {};
   for (const [name, value] of Object.entries(node)) {
     if (!isRecord(value)) continue;
-    out[name] = toSchemaInfo(value, ancestors);
+    out[name] = toSchemaInfo(value, ancestors, schemaNames);
   }
   return out;
 }
