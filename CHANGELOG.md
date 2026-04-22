@@ -1,5 +1,13 @@
 # @spryx/apeek
 
+## 0.2.1
+
+### Patch Changes
+
+- Fix stack overflow when parsing specs with cyclic schemas (e.g. `Conversation` ↔ `Message`). `toSchemaInfo` now tracks the current recursion path and emits `{ description: "[cyclic reference]" }` when it re-enters an ancestor schema. Surfaced by the Spryx backend's real spec.
+- Treat ad-hoc `--source https://…/openapi.json` flags as URL sources instead of misrouting them through the filesystem branch because of the `.json` extension. Also accepts `file://…` and explicitly rejects plain `http://` at the flag site (use `apeek source add --allow-insecure` instead).
+- Added cycle-detection and URL-flag tests to guard against regressions.
+
 ## 0.2.0
 
 ### Minor Changes

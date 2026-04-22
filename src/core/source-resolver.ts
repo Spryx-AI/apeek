@@ -10,7 +10,16 @@ export interface ResolvedSource {
   readonly display: { alias: string | undefined; location: string };
 }
 
+function looksLikeUrl(value: string): boolean {
+  return (
+    value.startsWith("http://") ||
+    value.startsWith("https://") ||
+    value.startsWith("file://")
+  );
+}
+
 function looksLikePath(value: string): boolean {
+  if (looksLikeUrl(value)) return false;
   if (isAbsolute(value)) return true;
   if (value.startsWith("./") || value.startsWith("../")) return true;
   return /\.(json|ya?ml)$/i.test(value);
@@ -38,6 +47,17 @@ function entryToDescriptor(entry: SourceEntry): SourceDescriptor {
 }
 
 function resolveFromFlag(flag: string, cwd: string, config: Config): ResolvedSource {
+  if (looksLikeUrl(flag)) {
+    if (flag.startsWith("http://")) {
+      throw new SourceError(`refusing to use plain HTTP for ad-hoc source: ${flag}`, {
+        hint: "use HTTPS, or add the source with 'apeek source add --allow-insecure'",
+      });
+    }
+    return {
+      descriptor: { kind: "url", url: flag },
+      display: { alias: undefined, location: flag },
+    };
+  }
   if (looksLikePath(flag)) {
     const abs = isAbsolute(flag) ? flag : resolve(cwd, flag);
     if (!existsSync(abs)) {

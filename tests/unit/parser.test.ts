@@ -86,4 +86,44 @@ describe("parseSpec", () => {
     const pathParam = getPet?.parameters.find((p) => p.in === "path");
     expect(pathParam?.required).toBe(true);
   });
+
+  it("handles cyclic schemas (self-reference after dereference) without stack overflow", async () => {
+    // Build a spec where @readme/openapi-parser's dereference produces a true
+    // object cycle: Node → properties.children.items → [same Node]. Repro of
+    // the bug that showed up on the Spryx backend spec.
+    const nodeSchema: Record<string, unknown> = { type: "object" };
+    nodeSchema["properties"] = {
+      id: { type: "string" },
+      children: {
+        type: "array",
+        items: nodeSchema, // self-reference
+      },
+    };
+    const spec = {
+      openapi: "3.0.0",
+      info: { title: "cyclic", version: "1" },
+      paths: {
+        "/nodes": {
+          get: {
+            operationId: "listNodes",
+            summary: "List nodes",
+            responses: {
+              "200": {
+                description: "OK",
+                content: {
+                  "application/json": { schema: nodeSchema },
+                },
+              },
+            },
+          },
+        },
+      },
+      components: { schemas: { Node: nodeSchema } },
+    };
+    const parsed = await parseSpec(spec);
+    expect(parsed.schemas["Node"]).toBeDefined();
+    // The cyclic slot should be marked rather than recursed into
+    const childItems = parsed.schemas["Node"]?.properties?.["children"]?.items;
+    expect(childItems?.description).toBe("[cyclic reference]");
+  });
 });

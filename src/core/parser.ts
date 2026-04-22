@@ -127,7 +127,7 @@ function normalize(doc: UnknownRecord): NormalizedSpec {
   const schemas: Record<string, NormalizedSchema> = {};
   for (const [name, schema] of Object.entries(schemasNode)) {
     if (!isRecord(schema)) continue;
-    schemas[name] = { name, ...toSchemaInfo(schema) };
+    schemas[name] = { name, ...toSchemaInfo(schema, new Set()) };
   }
 
   const tags: Record<string, string | undefined> = {};
@@ -198,7 +198,7 @@ function parseParameters(node: unknown): ParameterInfo[] {
     const loc = asString(entry["in"]);
     if (name === undefined || loc === undefined) continue;
     if (!["query", "header", "path", "cookie"].includes(loc)) continue;
-    const schema = isRecord(entry["schema"]) ? toSchemaInfo(entry["schema"]) : undefined;
+    const schema = isRecord(entry["schema"]) ? toSchemaInfo(entry["schema"], new Set()) : undefined;
     const param: ParameterInfo = {
       name,
       in: loc as ParameterInfo["in"],
@@ -229,7 +229,7 @@ function parseRequestBody(node: unknown): RequestBodyInfo | undefined {
   if (content === undefined) return undefined;
   const [mediaType, mediaNode] = Object.entries(content)[0] ?? [];
   if (mediaType === undefined || !isRecord(mediaNode)) return undefined;
-  const schema = isRecord(mediaNode["schema"]) ? toSchemaInfo(mediaNode["schema"]) : undefined;
+  const schema = isRecord(mediaNode["schema"]) ? toSchemaInfo(mediaNode["schema"], new Set()) : undefined;
   const body: RequestBodyInfo = {
     required: node["required"] === true,
     mediaType,
@@ -249,7 +249,7 @@ function parseResponses(node: unknown): ResponseInfo[] {
     if (content !== undefined) {
       const firstMedia = Object.values(content)[0];
       if (isRecord(firstMedia) && isRecord(firstMedia["schema"])) {
-        schema = toSchemaInfo(firstMedia["schema"]);
+        schema = toSchemaInfo(firstMedia["schema"], new Set());
       }
     }
     const entry: ResponseInfo = {
@@ -276,44 +276,54 @@ function asSecurity(node: unknown): SecurityRequirement[] {
   return out;
 }
 
-function toSchemaInfo(node: UnknownRecord): SchemaInfo {
-  const type = asString(node["type"]);
-  const format = asString(node["format"]);
-  const description = asString(node["description"]);
-  const nullable = node["nullable"] === true ? true : undefined;
-  const enumValues = Array.isArray(node["enum"])
-    ? (node["enum"].filter(
-        (v): v is string | number | boolean | null =>
-          v === null ||
-          typeof v === "string" ||
-          typeof v === "number" ||
-          typeof v === "boolean",
-      ) as readonly (string | number | boolean | null)[])
-    : undefined;
-  const required = asStringArray(node["required"]);
-  const properties = isRecord(node["properties"])
-    ? toProperties(node["properties"])
-    : undefined;
-  const items = isRecord(node["items"]) ? toSchemaInfo(node["items"]) : undefined;
+function toSchemaInfo(node: UnknownRecord, ancestors: Set<object>): SchemaInfo {
+  if (ancestors.has(node)) {
+    return { description: "[cyclic reference]" };
+  }
+  ancestors.add(node);
+  try {
+    const type = asString(node["type"]);
+    const format = asString(node["format"]);
+    const description = asString(node["description"]);
+    const nullable = node["nullable"] === true ? true : undefined;
+    const enumValues = Array.isArray(node["enum"])
+      ? (node["enum"].filter(
+          (v): v is string | number | boolean | null =>
+            v === null ||
+            typeof v === "string" ||
+            typeof v === "number" ||
+            typeof v === "boolean",
+        ) as readonly (string | number | boolean | null)[])
+      : undefined;
+    const required = asStringArray(node["required"]);
+    const properties = isRecord(node["properties"])
+      ? toProperties(node["properties"], ancestors)
+      : undefined;
+    const items = isRecord(node["items"])
+      ? toSchemaInfo(node["items"], ancestors)
+      : undefined;
 
-  const result: SchemaInfo = {
-    ...(type !== undefined ? { type } : {}),
-    ...(format !== undefined ? { format } : {}),
-    ...(description !== undefined ? { description } : {}),
-    ...(enumValues !== undefined && enumValues.length > 0 ? { enum: enumValues } : {}),
-    ...(required.length > 0 ? { required } : {}),
-    ...(properties !== undefined ? { properties } : {}),
-    ...(items !== undefined ? { items } : {}),
-    ...(nullable !== undefined ? { nullable } : {}),
-  };
-  return result;
+    const result: SchemaInfo = {
+      ...(type !== undefined ? { type } : {}),
+      ...(format !== undefined ? { format } : {}),
+      ...(description !== undefined ? { description } : {}),
+      ...(enumValues !== undefined && enumValues.length > 0 ? { enum: enumValues } : {}),
+      ...(required.length > 0 ? { required } : {}),
+      ...(properties !== undefined ? { properties } : {}),
+      ...(items !== undefined ? { items } : {}),
+      ...(nullable !== undefined ? { nullable } : {}),
+    };
+    return result;
+  } finally {
+    ancestors.delete(node);
+  }
 }
 
-function toProperties(node: UnknownRecord): Record<string, SchemaInfo> {
+function toProperties(node: UnknownRecord, ancestors: Set<object>): Record<string, SchemaInfo> {
   const out: Record<string, SchemaInfo> = {};
   for (const [name, value] of Object.entries(node)) {
     if (!isRecord(value)) continue;
-    out[name] = toSchemaInfo(value);
+    out[name] = toSchemaInfo(value, ancestors);
   }
   return out;
 }
