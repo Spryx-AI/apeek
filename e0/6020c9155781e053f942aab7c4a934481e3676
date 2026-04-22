@@ -1,0 +1,41 @@
+openspec/changes/bootstrap-apeek-cli/specs/cli-foundation/spec.md
+  95178e86404d09d4 1-162
+openspec/changes/bootstrap-apeek-cli/specs/openapi-query/spec.md
+  95178e86404d09d4 1-125
+openspec/changes/bootstrap-apeek-cli/design.md
+  95178e86404d09d4 1-297
+openspec/changes/bootstrap-apeek-cli/tasks.md
+  95178e86404d09d4 1-118
+openspec/changes/bootstrap-apeek-cli/.openspec.yaml
+  95178e86404d09d4 1-2
+openspec/changes/bootstrap-apeek-cli/specs/openapi-source-management/spec.md
+  95178e86404d09d4 1-268
+openspec/changes/bootstrap-apeek-cli/specs/output-formatting/spec.md
+  95178e86404d09d4 1-170
+openspec/changes/bootstrap-apeek-cli/proposal.md
+  95178e86404d09d4 1-49
+openspec/changes/bootstrap-apeek-cli/specs/openapi-ingestion/spec.md
+  95178e86404d09d4 1-213
+openspec/changes/bootstrap-apeek-cli/specs/agent-integration/spec.md
+  95178e86404d09d4 1-190
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "e06020c9155781e053f942aab7c4a934481e3676",
+  "prompts": {
+    "95178e86404d09d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35ac28c0-7b9f-42ac-b48c-2c9654d860ed",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pedro Cantidio",
+      "messages": [],
+      "total_additions": 1594,
+      "total_deletions": 0,
+      "accepted_lines": 1594,
+      "overriden_lines": 0
+    }
+  }
+}
