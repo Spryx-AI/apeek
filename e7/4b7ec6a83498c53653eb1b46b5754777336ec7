@@ -1,0 +1,35 @@
+openspec/changes/bootstrap-apeek-cli/tasks.md
+  95178e86404d09d4 43,47-52
+src/core/formatter/markdown.ts
+  95178e86404d09d4 1-179
+src/core/formatter/compact.ts
+  95178e86404d09d4 1-28
+src/core/formatter/json.ts
+  95178e86404d09d4 1-58
+src/core/formatter/types.ts
+  95178e86404d09d4 1-46
+tests/unit/formatter.test.ts
+  95178e86404d09d4 1-213
+src/core/formatter/index.ts
+  95178e86404d09d4 1-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "e74b7ec6a83498c53653eb1b46b5754777336ec7",
+  "prompts": {
+    "95178e86404d09d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35ac28c0-7b9f-42ac-b48c-2c9654d860ed",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pedro Cantidio",
+      "messages": [],
+      "total_additions": 565,
+      "total_deletions": 7,
+      "accepted_lines": 573,
+      "overriden_lines": 0
+    }
+  }
+}
