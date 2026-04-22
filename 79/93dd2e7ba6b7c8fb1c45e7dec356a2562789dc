@@ -1,0 +1,45 @@
+tests/unit/agents.test.ts
+  95178e86404d09d4 145,154
+openspec/changes/bootstrap-apeek-cli/proposal.md
+  95178e86404d09d4 14,45
+CHANGELOG.md
+  95178e86404d09d4 1
+package.json
+  95178e86404d09d4 2
+openspec/changes/bootstrap-apeek-cli/design.md
+  95178e86404d09d4 170,250,287
+README.md
+  95178e86404d09d4 11,14
+docs/AGENTS.md
+  95178e86404d09d4 75
+openspec/changes/bootstrap-apeek-cli/specs/cli-foundation/spec.md
+  95178e86404d09d4 20
+src/agents/templates/cursor-rule.ts
+  95178e86404d09d4 20
+src/agents/templates/claude-code-skill.ts
+  95178e86404d09d4 64
+openspec/changes/bootstrap-apeek-cli/specs/agent-integration/spec.md
+  95178e86404d09d4 167
+openspec/changes/bootstrap-apeek-cli/tasks.md
+  95178e86404d09d4 3,101,105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "7993dd2e7ba6b7c8fb1c45e7dec356a2562789dc",
+  "prompts": {
+    "95178e86404d09d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35ac28c0-7b9f-42ac-b48c-2c9654d860ed",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pedro Cantidio",
+      "messages": [],
+      "total_additions": 323,
+      "total_deletions": 23,
+      "accepted_lines": 319,
+      "overriden_lines": 0
+    }
+  }
+}
