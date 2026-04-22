@@ -1,0 +1,43 @@
+openspec/changes/bootstrap-apeek-cli/tasks.md
+  95178e86404d09d4 56-66
+src/cli/commands/schema.ts
+  95178e86404d09d4 1-62
+src/cli/commands/search.ts
+  95178e86404d09d4 1-56
+src/core/source-resolver.ts
+  95178e86404d09d4 1-102
+tests/integration/commands.test.ts
+  95178e86404d09d4 1-266
+src/core/query-context.ts
+  95178e86404d09d4 1-78
+src/cli/command-context.ts
+  95178e86404d09d4 1-37
+src/cli/commands/cache.ts
+  95178e86404d09d4 1-48
+src/core/autodiscovery.ts
+  95178e86404d09d4 1-35
+src/cli/commands/op.ts
+  95178e86404d09d4 1-39
+src/cli/index.ts
+  95178e86404d09d4 2,6-16,38-53,60-62,65,67-71,76-78,88-95,109-118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "593a8a362ef248b3b8f66f9f293323853ef9a02c",
+  "prompts": {
+    "95178e86404d09d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35ac28c0-7b9f-42ac-b48c-2c9654d860ed",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pedro Cantidio",
+      "messages": [],
+      "total_additions": 824,
+      "total_deletions": 47,
+      "accepted_lines": 800,
+      "overriden_lines": 0
+    }
+  }
+}
