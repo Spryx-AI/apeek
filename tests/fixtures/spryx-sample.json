@@ -1,0 +1,165 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Spryx Sample",
+    "version": "2026.01.01",
+    "description": "Anonymized 3.1 subset used for apeek fixture tests."
+  },
+  "servers": [{ "url": "https://api.spryx.example/v1" }],
+  "security": [{ "tenant_idp": [] }],
+  "tags": [
+    { "name": "deals", "description": "Deal management" },
+    { "name": "conversations" }
+  ],
+  "paths": {
+    "/deals": {
+      "post": {
+        "operationId": "createDeal",
+        "summary": "Create a deal",
+        "description": "Creates a new deal, optionally linked to a contact and conversation.",
+        "tags": ["deals"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DealCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Deal" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deals/{deal_id}/stages": {
+      "post": {
+        "operationId": "advanceDealStage",
+        "summary": "Advance deal stage",
+        "tags": ["deals"],
+        "parameters": [
+          {
+            "name": "deal_id",
+            "in": "path",
+            "required": true,
+            "description": "Deal identifier",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["stage_id"],
+                "properties": { "stage_id": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Deal" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversations/{conversation_id}": {
+      "get": {
+        "operationId": "getConversation",
+        "summary": "Fetch one conversation",
+        "tags": ["conversations"],
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Conversation" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "tenant_idp": { "type": "http", "scheme": "bearer" }
+    },
+    "schemas": {
+      "Deal": {
+        "type": "object",
+        "description": "A deal record.",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string", "description": "Deal identifier" },
+          "name": { "type": "string" },
+          "value_cents": { "type": "integer" },
+          "stage_id": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["open", "won", "lost"]
+          }
+        }
+      },
+      "DealCreate": {
+        "type": "object",
+        "required": ["name", "contact_id"],
+        "properties": {
+          "name": { "type": "string" },
+          "contact_id": { "type": "string" },
+          "value_cents": { "type": "integer" },
+          "stage_id": { "type": "string" }
+        }
+      },
+      "Conversation": {
+        "type": "object",
+        "description": "A conversation with a contact.",
+        "properties": {
+          "id": { "type": "string" },
+          "subject": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["open", "closed"]
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

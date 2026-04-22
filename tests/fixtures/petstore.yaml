@@ -1,0 +1,116 @@
+openapi: 3.0.3
+info:
+  title: Petstore
+  version: 1.0.0
+  description: A small sample OpenAPI 3.0 spec used for apeek fixture tests.
+servers:
+  - url: https://petstore.example.com/v1
+tags:
+  - name: pets
+    description: Pet operations
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      summary: List all pets
+      description: Returns a paginated list of pets.
+      tags: [pets]
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Max items per page
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pet"
+    post:
+      operationId: createPet
+      summary: Create a pet
+      description: Registers a new pet in the store.
+      tags: [pets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewPet"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pet"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /pets/{pet_id}:
+    get:
+      operationId: getPet
+      summary: Fetch one pet
+      tags: [pets]
+      parameters:
+        - name: pet_id
+          in: path
+          required: true
+          description: Pet identifier
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pet"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Pet:
+      type: object
+      description: A pet in the store.
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          description: Unique pet identifier
+        name:
+          type: string
+        status:
+          type: string
+          enum: [available, pending, sold]
+          description: Availability status
+    NewPet:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [available, pending, sold]
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: integer
+        message:
+          type: string

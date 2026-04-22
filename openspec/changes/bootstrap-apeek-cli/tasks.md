@@ -28,18 +28,18 @@
 - [x] 2.9 Implement `src/cli/index.ts` Node version check at startup (reject <20 with code 2)
 - [x] 2.10 Implement exit-code mapping in the CLI error boundary (1 user / 2 config-IO / 3 network / 99 unexpected)
 - [x] 2.11 Unit tests: errors (exit code mapping), redact, env (interpolation + missing + default), paths (XDG set/unset), loader (merge, both-files error, invalid schema, unknown fields)
-- [ ] 2.12 Commit: `feat: config, errors, output foundations`
+- [x] 2.12 Commit: `feat: config, errors, output foundations`
 
 ## 3. Ingestion: fetch, parse, index, cache
 
-- [ ] 3.1 Implement `src/core/fetcher.ts` — local file reader (json/yaml/yml, reject other extensions), HTTP(S) via native `fetch`, per-source headers resolved via `env.ts` at call time, `If-None-Match` / `If-Modified-Since` when previous meta exists, HTTPS-by-default with `allowInsecure` opt-in
-- [ ] 3.2 Implement `src/core/parser.ts` — wrap `@readme/openapi-parser`, enforce 30s timeout, validate `openapi: 3.0.x | 3.1.x` (reject Swagger 2.0 and missing version), resolve all `$ref`s, normalize to internal `NormalizedSpec` type in `src/types.ts`
-- [ ] 3.3 Implement `src/core/indexer.ts` — minisearch over operations (weights: operationId/summary high; description, method, path segments, tags medium; params + request-body schema name low) and component schemas (name high, description medium, property names low); serialize to JSON
-- [ ] 3.4 Implement `src/core/cache.ts` — directory layout (`<cache-root>/<source-hash>/{spec,index,meta}.json`); source-hash = sha256 of canonical identifier (normalized URL or absolute path) truncated to 16 hex; meta includes `fetchedAt`, `ttlSeconds`, `etag?`, `lastModified?`, `specHash`, `cacheSchemaVersion`, `nodeMajor`
-- [ ] 3.5 Cache: TTL logic (default 3600 remote, unlimited local), ETag/Last-Modified invalidation on 200 vs 304, `--refresh` bypass, atomic writes via `<file>.tmp` + rename, corrupt-read treated as miss (no user-visible error)
-- [ ] 3.6 Cache: mode `0700` dirs / `0600` files on POSIX, best-effort on Windows, invalidate on `cacheSchemaVersion` or `nodeMajor` change
-- [ ] 3.7 Add `tests/fixtures/petstore.yaml` (small OpenAPI 3.0 spec) and `tests/fixtures/spryx-sample.json` (anonymized 3.1 subset with auth requirements, references, enums)
-- [ ] 3.8 Unit tests: fetcher (local found/missing/bad-extension, HTTP 200/401/timeout, HTTPS enforcement, header forwarding, redacted errors), parser (3.0 ok, 3.1 ok, Swagger 2.0 rejected, broken $ref, parse timeout), indexer (weight ordering, path-segment tokenization, schema indexing, serialize/deserialize roundtrip), cache (TTL fresh/expired, ETag roundtrip, `--refresh`, atomic write, corrupt-read refetch, schema-version bump invalidates, POSIX perms)
+- [x] 3.1 Implement `src/core/fetcher.ts` — local file reader (json/yaml/yml, reject other extensions), HTTP(S) via native `fetch`, per-source headers resolved via `env.ts` at call time, `If-None-Match` / `If-Modified-Since` when previous meta exists, HTTPS-by-default with `allowInsecure` opt-in
+- [x] 3.2 Implement `src/core/parser.ts` — wrap `@readme/openapi-parser`, enforce 30s timeout, validate `openapi: 3.0.x | 3.1.x` (reject Swagger 2.0 and missing version), resolve all `$ref`s, normalize to internal `NormalizedSpec` type in `src/types.ts`
+- [x] 3.3 Implement `src/core/indexer.ts` — minisearch over operations (weights: operationId/summary high; description, method, path segments, tags medium; params + request-body schema name low) and component schemas (name high, description medium, property names low); serialize to JSON
+- [x] 3.4 Implement `src/core/cache.ts` — directory layout (`<cache-root>/<source-hash>/{spec,index,meta}.json`); source-hash = sha256 of canonical identifier (normalized URL or absolute path) truncated to 16 hex; meta includes `fetchedAt`, `ttlSeconds`, `etag?`, `lastModified?`, `specHash`, `cacheSchemaVersion`, `nodeMajor`
+- [x] 3.5 Cache: TTL logic (default 3600 remote, unlimited local), ETag/Last-Modified invalidation on 200 vs 304, `--refresh` bypass, atomic writes via `<file>.tmp` + rename, corrupt-read treated as miss (no user-visible error)
+- [x] 3.6 Cache: mode `0700` dirs / `0600` files on POSIX, best-effort on Windows, invalidate on `cacheSchemaVersion` or `nodeMajor` change
+- [x] 3.7 Add `tests/fixtures/petstore.yaml` (small OpenAPI 3.0 spec) and `tests/fixtures/spryx-sample.json` (anonymized 3.1 subset with auth requirements, references, enums)
+- [x] 3.8 Unit tests: fetcher (local found/missing/bad-extension, HTTP 200/401/timeout, HTTPS enforcement, header forwarding, redacted errors), parser (3.0 ok, 3.1 ok, Swagger 2.0 rejected, broken $ref, parse timeout), indexer (weight ordering, path-segment tokenization, schema indexing, serialize/deserialize roundtrip), cache (TTL fresh/expired, ETag roundtrip, `--refresh`, atomic write, corrupt-read refetch, schema-version bump invalidates, POSIX perms)
 - [ ] 3.9 Commit: `feat: openapi ingestion pipeline`
 
 ## 4. Formatting
