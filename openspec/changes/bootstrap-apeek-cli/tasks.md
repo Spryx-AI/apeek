@@ -53,17 +53,17 @@
 
 ## 5. Query commands and autodiscovery
 
-- [ ] 5.1 Wire commander entrypoint in `src/cli/index.ts` with global flags `--source/-s`, `--format/-f`, `--limit/-l`, `--no-color`, `--verbose/-v`, `--refresh`; route through error boundary
-- [ ] 5.2 Implement `src/core/autodiscovery.ts` — walk cwd → root, extension precedence per spec, stop at first hit; return anonymous source descriptor (hash off absolute path, no config-file entry)
-- [ ] 5.3 Implement source resolution precedence in a shared helper: `--source` flag > env > `defaultSource` > autodiscovery; raise `SourceError` with hints when all fail
-- [ ] 5.4 Implement `src/cli/commands/search.ts` — query minisearch, apply `--limit` (default 5), dispatch to formatter, zero-results exits 0
-- [ ] 5.5 Implement `src/cli/commands/op.ts` — method case-insensitive match, literal path template match (including `{param}` placeholders), `NotFoundError` with `apeek search` hint on miss
-- [ ] 5.6 Implement `src/cli/commands/schema.ts` — case-sensitive match, `NotFoundError` with close-match suggestions (Levenshtein-like) on miss
-- [ ] 5.7 Implement `src/cli/commands/cache.ts` — `cache clear [<alias>]`, delete specific or all cache dirs, warn on unknown alias without failing
-- [ ] 5.8 Implement `version` command (and `--version` flag equivalence) reading bundled `package.json`, no other I/O
-- [ ] 5.9 Implement first-run welcome: when no config file exists and `apeek` is invoked with no command, print welcome pointing at `apeek setup` to stderr and exit 0
-- [ ] 5.10 Implement unknown-command handler: print suggestion to stderr and exit 1
-- [ ] 5.11 Integration tests: end-to-end `search` → `op` → `schema` against `petstore.yaml`; `--source=./fixtures/petstore.yaml` ad-hoc path; autodiscovery from nested cwd; extension precedence; walk stops at first hit; nothing-found error; `--refresh` forces refetch; `--format json` is parseable; compact single-line shape; zero-result search exits 0; `op` method case-insensitivity; `schema` case-sensitivity with Did-you-mean hint
+- [x] 5.1 Wire commander entrypoint in `src/cli/index.ts` with global flags `--source/-s`, `--format/-f`, `--limit/-l`, `--no-color`, `--verbose/-v`, `--refresh`; route through error boundary
+- [x] 5.2 Implement `src/core/autodiscovery.ts` — walk cwd → root, extension precedence per spec, stop at first hit; return anonymous source descriptor (hash off absolute path, no config-file entry)
+- [x] 5.3 Implement source resolution precedence in a shared helper: `--source` flag > env > `defaultSource` > autodiscovery; raise `SourceError` with hints when all fail
+- [x] 5.4 Implement `src/cli/commands/search.ts` — query minisearch, apply `--limit` (default 5), dispatch to formatter, zero-results exits 0
+- [x] 5.5 Implement `src/cli/commands/op.ts` — method case-insensitive match, literal path template match (including `{param}` placeholders), `NotFoundError` with `apeek search` hint on miss
+- [x] 5.6 Implement `src/cli/commands/schema.ts` — case-sensitive match, `NotFoundError` with close-match suggestions (Levenshtein-like) on miss
+- [x] 5.7 Implement `src/cli/commands/cache.ts` — `cache clear [<alias>]`, delete specific or all cache dirs, warn on unknown alias without failing
+- [x] 5.8 Implement `version` command (and `--version` flag equivalence) reading bundled `package.json`, no other I/O
+- [x] 5.9 Implement first-run welcome: when no config file exists and `apeek` is invoked with no command, print welcome pointing at `apeek setup` to stderr and exit 0
+- [x] 5.10 Implement unknown-command handler: print suggestion to stderr and exit 1
+- [x] 5.11 Integration tests: end-to-end `search` → `op` → `schema` against `petstore.yaml`; `--source=./fixtures/petstore.yaml` ad-hoc path; autodiscovery from nested cwd; extension precedence; walk stops at first hit; nothing-found error; `--refresh` forces refetch; `--format json` is parseable; compact single-line shape; zero-result search exits 0; `op` method case-insensitivity; `schema` case-sensitivity with Did-you-mean hint
 - [ ] 5.12 Commit: `feat: search, op, schema, autodiscovery, version, cache clear`
 
 ## 6. Source and config management
