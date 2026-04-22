@@ -1,0 +1,23 @@
+src/core/parser.ts
+  95178e86404d09d4 121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "12cd3a9aceb7319394b8eeb6660337aa9079f2f8",
+  "prompts": {
+    "95178e86404d09d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35ac28c0-7b9f-42ac-b48c-2c9654d860ed",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pedro Cantidio",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 9,
+      "overriden_lines": 0
+    }
+  }
+}
