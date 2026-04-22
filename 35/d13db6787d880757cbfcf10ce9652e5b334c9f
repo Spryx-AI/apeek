@@ -1,0 +1,45 @@
+tests/fixtures/petstore.yaml
+  95178e86404d09d4 1-116
+tests/fixtures/spryx-sample.json
+  95178e86404d09d4 1-165
+src/core/parser.ts
+  95178e86404d09d4 1-319
+tests/unit/indexer.test.ts
+  95178e86404d09d4 1-83
+src/core/indexer.ts
+  95178e86404d09d4 1-197
+openspec/changes/bootstrap-apeek-cli/tasks.md
+  95178e86404d09d4 31,35-42
+src/types.ts
+  95178e86404d09d4 1-108
+tests/unit/parser.test.ts
+  95178e86404d09d4 1-89
+tests/unit/cache.test.ts
+  95178e86404d09d4 1-178
+tests/unit/fetcher.test.ts
+  95178e86404d09d4 1-172
+src/core/fetcher.ts
+  95178e86404d09d4 1-136
+src/core/cache.ts
+  95178e86404d09d4 1-160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "35d13db6787d880757cbfcf10ce9652e5b334c9f",
+  "prompts": {
+    "95178e86404d09d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35ac28c0-7b9f-42ac-b48c-2c9654d860ed",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pedro Cantidio",
+      "messages": [],
+      "total_additions": 1739,
+      "total_deletions": 16,
+      "accepted_lines": 1740,
+      "overriden_lines": 0
+    }
+  }
+}
