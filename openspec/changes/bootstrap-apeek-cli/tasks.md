@@ -13,21 +13,21 @@
 - [x] 1.11 Keep existing `LICENSE` (MIT, already in repo) and stub `README.md` (full README written in task 8.1)
 - [x] 1.12 Verify `npm run build && node dist/cli/index.js --version` prints the version
 - [x] 1.13 Verify local CLI linking: `npm link && apeek --version`
-- [ ] 1.14 Commit: `chore: scaffold apeek project`
+- [x] 1.14 Commit: `chore: scaffold apeek project`
 
 ## 2. Foundations: errors, logging, config, env
 
-- [ ] 2.1 Implement `src/lib/errors.ts` — base `ApeekError` + subclasses (`ConfigError`, `SourceError`, `FetchError`, `ParseError`, `CacheError`, `AgentInstallError`, `MissingEnvError`, `NotFoundError`), each with `code`, `message`, optional `hint`
-- [ ] 2.2 Implement `src/lib/redact.ts` — mask values for `Authorization`, `X-*-Token`, `Api-Key`, `Cookie` headers
-- [ ] 2.3 Implement `src/cli/output.ts` — `stdout`, `stderr`, `debug`, `warn`, `error` writers; color gating on TTY + `NO_COLOR` + `--no-color` flag; no spinners on stdout
-- [ ] 2.4 Implement `src/lib/logger.ts` — verbose-aware logger feeding `output.ts`, redacts via `redact.ts`
-- [ ] 2.5 Implement `src/config/paths.ts` — XDG resolution for global config (`$XDG_CONFIG_HOME/apeek/` or `~/.config/apeek/`) and cache root (`$XDG_CACHE_HOME/apeek/` or `~/.cache/apeek/`), cross-platform
-- [ ] 2.6 Implement `src/config/schema.ts` — zod schemas for config v1: top-level `{ version, defaultSource?, sources, defaults }`, per-source `{ url? | path?, headers?, cacheTtlSeconds?, allowInsecure?, addedAt }`
-- [ ] 2.7 Implement `src/lib/env.ts` — parse `${VAR}` and `${VAR:-default}`; raise `MissingEnvError` when unset and no default
-- [ ] 2.8 Implement `src/config/loader.ts` — load global + optional project (`.apeekrc.json` XOR `apeek.config.json`), deep-merge per-alias, reject both-present case, zod-validate, leave env placeholders unresolved
-- [ ] 2.9 Implement `src/cli/index.ts` Node version check at startup (reject <20 with code 2)
-- [ ] 2.10 Implement exit-code mapping in the CLI error boundary (1 user / 2 config-IO / 3 network / 99 unexpected)
-- [ ] 2.11 Unit tests: errors (exit code mapping), redact, env (interpolation + missing + default), paths (XDG set/unset), loader (merge, both-files error, invalid schema, unknown fields)
+- [x] 2.1 Implement `src/lib/errors.ts` — base `ApeekError` + subclasses (`ConfigError`, `SourceError`, `FetchError`, `ParseError`, `CacheError`, `AgentInstallError`, `MissingEnvError`, `NotFoundError`), each with `code`, `message`, optional `hint`
+- [x] 2.2 Implement `src/lib/redact.ts` — mask values for `Authorization`, `X-*-Token`, `Api-Key`, `Cookie` headers
+- [x] 2.3 Implement `src/cli/output.ts` — `stdout`, `stderr`, `debug`, `warn`, `error` writers; color gating on TTY + `NO_COLOR` + `--no-color` flag; no spinners on stdout
+- [x] 2.4 Implement `src/lib/logger.ts` — verbose-aware logger feeding `output.ts`, redacts via `redact.ts`
+- [x] 2.5 Implement `src/config/paths.ts` — XDG resolution for global config (`$XDG_CONFIG_HOME/apeek/` or `~/.config/apeek/`) and cache root (`$XDG_CACHE_HOME/apeek/` or `~/.cache/apeek/`), cross-platform
+- [x] 2.6 Implement `src/config/schema.ts` — zod schemas for config v1: top-level `{ version, defaultSource?, sources, defaults }`, per-source `{ url? | path?, headers?, cacheTtlSeconds?, allowInsecure?, addedAt }`
+- [x] 2.7 Implement `src/lib/env.ts` — parse `${VAR}` and `${VAR:-default}`; raise `MissingEnvError` when unset and no default
+- [x] 2.8 Implement `src/config/loader.ts` — load global + optional project (`.apeekrc.json` XOR `apeek.config.json`), deep-merge per-alias, reject both-present case, zod-validate, leave env placeholders unresolved
+- [x] 2.9 Implement `src/cli/index.ts` Node version check at startup (reject <20 with code 2)
+- [x] 2.10 Implement exit-code mapping in the CLI error boundary (1 user / 2 config-IO / 3 network / 99 unexpected)
+- [x] 2.11 Unit tests: errors (exit code mapping), redact, env (interpolation + missing + default), paths (XDG set/unset), loader (merge, both-files error, invalid schema, unknown fields)
 - [ ] 2.12 Commit: `feat: config, errors, output foundations`
 
 ## 3. Ingestion: fetch, parse, index, cache
