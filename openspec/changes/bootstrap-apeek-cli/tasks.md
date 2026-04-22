@@ -40,16 +40,16 @@
 - [x] 3.6 Cache: mode `0700` dirs / `0600` files on POSIX, best-effort on Windows, invalidate on `cacheSchemaVersion` or `nodeMajor` change
 - [x] 3.7 Add `tests/fixtures/petstore.yaml` (small OpenAPI 3.0 spec) and `tests/fixtures/spryx-sample.json` (anonymized 3.1 subset with auth requirements, references, enums)
 - [x] 3.8 Unit tests: fetcher (local found/missing/bad-extension, HTTP 200/401/timeout, HTTPS enforcement, header forwarding, redacted errors), parser (3.0 ok, 3.1 ok, Swagger 2.0 rejected, broken $ref, parse timeout), indexer (weight ordering, path-segment tokenization, schema indexing, serialize/deserialize roundtrip), cache (TTL fresh/expired, ETag roundtrip, `--refresh`, atomic write, corrupt-read refetch, schema-version bump invalidates, POSIX perms)
-- [ ] 3.9 Commit: `feat: openapi ingestion pipeline`
+- [x] 3.9 Commit: `feat: openapi ingestion pipeline`
 
 ## 4. Formatting
 
-- [ ] 4.1 Implement `src/core/formatter/markdown.ts` — `renderSearch`, `renderOp`, `renderSchema` producing the structures required in `specs/output-formatting/spec.md` (h1/h2 hierarchy, tables, fenced code blocks, no TTY decorations)
-- [ ] 4.2 Implement `src/core/formatter/json.ts` — stable documented shape per spec (search: query/source/results; op: full operation payload; schema: name/description/properties/required)
-- [ ] 4.3 Implement `src/core/formatter/compact.ts` — one line per result for search, single-line summary for op/schema
-- [ ] 4.4 Implement `src/core/formatter/index.ts` — dispatcher on `--format`; reject invalid formats with exit 1
-- [ ] 4.5 Snapshot tests for each formatter against fixture results; verify no ANSI escapes in piped output; verify `NO_COLOR` and `--no-color` both disable color; verify omitted sections (no requestBody, no parameters, no description) don't emit empty headings
-- [ ] 4.6 Commit: `feat: markdown, json, compact formatters`
+- [x] 4.1 Implement `src/core/formatter/markdown.ts` — `renderSearch`, `renderOp`, `renderSchema` producing the structures required in `specs/output-formatting/spec.md` (h1/h2 hierarchy, tables, fenced code blocks, no TTY decorations)
+- [x] 4.2 Implement `src/core/formatter/json.ts` — stable documented shape per spec (search: query/source/results; op: full operation payload; schema: name/description/properties/required)
+- [x] 4.3 Implement `src/core/formatter/compact.ts` — one line per result for search, single-line summary for op/schema
+- [x] 4.4 Implement `src/core/formatter/index.ts` — dispatcher on `--format`; reject invalid formats with exit 1
+- [x] 4.5 Snapshot tests for each formatter against fixture results; verify no ANSI escapes in piped output; verify `NO_COLOR` and `--no-color` both disable color; verify omitted sections (no requestBody, no parameters, no description) don't emit empty headings
+- [x] 4.6 Commit: `feat: markdown, json, compact formatters`
 
 ## 5. Query commands and autodiscovery
 
