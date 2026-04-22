@@ -1,0 +1,31 @@
+tests/setup/build.ts
+  95178e86404d09d4 1-5
+tests/integration/source-config.test.ts
+  95178e86404d09d4 2,38-42
+vitest.config.ts
+  95178e86404d09d4 7
+tests/integration/commands.test.ts
+  95178e86404d09d4 2-3,39-43
+tests/integration/install.test.ts
+  95178e86404d09d4 2,35-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "58dc2738aa5651b23d6e6998f07ecad130021e42",
+  "prompts": {
+    "95178e86404d09d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35ac28c0-7b9f-42ac-b48c-2c9654d860ed",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pedro Cantidio",
+      "messages": [],
+      "total_additions": 31,
+      "total_deletions": 13,
+      "accepted_lines": 33,
+      "overriden_lines": 0
+    }
+  }
+}
