@@ -1,7 +1,7 @@
-import { readFileSync, existsSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { readFileSync, existsSync, mkdirSync, writeFileSync, renameSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 import { ConfigError } from "../lib/errors.js";
-import { getGlobalConfigPath, PROJECT_CONFIG_FILENAMES } from "./paths.js";
+import { getGlobalConfigDir, getGlobalConfigPath, PROJECT_CONFIG_FILENAMES } from "./paths.js";
 import { configSchema, emptyConfig, type Config, type SourceEntry } from "./schema.js";
 
 export interface LoadOptions {
@@ -81,6 +81,33 @@ function mergeSourceEntry(base: SourceEntry | undefined, overlay: SourceEntry): 
     merged.headers = { ...(base.headers ?? {}), ...(overlay.headers ?? {}) };
   }
   return merged;
+}
+
+export function loadGlobalConfigOnly(globalPath: string = getGlobalConfigPath()): Config {
+  if (!existsSync(globalPath)) return emptyConfig();
+  return parseConfig(readJsonFile(globalPath), globalPath);
+}
+
+export function writeGlobalConfig(
+  config: Config,
+  globalPath: string = getGlobalConfigPath(),
+): void {
+  const parsed = configSchema.safeParse(config);
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    throw new ConfigError(
+      `refusing to write invalid config: ${issue?.path.join(".") ?? "<root>"}: ${issue?.message ?? "validation failed"}`,
+    );
+  }
+  const dir = dirname(globalPath);
+  if (globalPath === getGlobalConfigPath()) {
+    mkdirSync(getGlobalConfigDir(), { recursive: true });
+  } else {
+    mkdirSync(dir, { recursive: true });
+  }
+  const tmp = `${globalPath}.tmp`;
+  writeFileSync(tmp, JSON.stringify(parsed.data, null, 2) + "\n", { mode: 0o600 });
+  renameSync(tmp, globalPath);
 }
 
 export function loadConfig(opts: LoadOptions = {}): LoadedConfig {

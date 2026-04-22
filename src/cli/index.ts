@@ -14,6 +14,8 @@ import { buildSearchCommand } from "./commands/search.js";
 import { buildOpCommand } from "./commands/op.js";
 import { buildSchemaCommand } from "./commands/schema.js";
 import { buildCacheCommand } from "./commands/cache.js";
+import { buildSourceCommand } from "./commands/source.js";
+import { buildConfigCommand } from "./commands/config.js";
 
 const MIN_NODE_MAJOR = 20;
 
@@ -89,6 +91,8 @@ program.addCommand(buildSearchCommand());
 program.addCommand(buildOpCommand());
 program.addCommand(buildSchemaCommand());
 program.addCommand(buildCacheCommand());
+program.addCommand(buildSourceCommand());
+program.addCommand(buildConfigCommand());
 
 program.showHelpAfterError("(run 'apeek --help' for help)");
 program.showSuggestionAfterError(true);

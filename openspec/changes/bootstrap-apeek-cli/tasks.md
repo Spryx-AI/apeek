@@ -64,19 +64,19 @@
 - [x] 5.9 Implement first-run welcome: when no config file exists and `apeek` is invoked with no command, print welcome pointing at `apeek setup` to stderr and exit 0
 - [x] 5.10 Implement unknown-command handler: print suggestion to stderr and exit 1
 - [x] 5.11 Integration tests: end-to-end `search` → `op` → `schema` against `petstore.yaml`; `--source=./fixtures/petstore.yaml` ad-hoc path; autodiscovery from nested cwd; extension precedence; walk stops at first hit; nothing-found error; `--refresh` forces refetch; `--format json` is parseable; compact single-line shape; zero-result search exits 0; `op` method case-insensitivity; `schema` case-sensitivity with Did-you-mean hint
-- [ ] 5.12 Commit: `feat: search, op, schema, autodiscovery, version, cache clear`
+- [x] 5.12 Commit: `feat: search, op, schema, autodiscovery, version, cache clear`
 
 ## 6. Source and config management
 
-- [ ] 6.1 Implement `src/core/source-manager.ts` — `add`, `list`, `use`, `remove`, `refresh`, `info`; writes through zod schema via loader; `remove` also deletes associated cache dir
-- [ ] 6.2 Implement `src/cli/commands/source.ts` subcommands wiring — `source add` accepts `--header key=value` (repeatable), `--ttl <seconds>`, `--allow-insecure`; first-added source auto-becomes `defaultSource`; duplicate alias rejected; http:// rejected unless `--allow-insecure`
-- [ ] 6.3 `source list`: mark default, include URL/path; empty state points at `apeek source add` / `apeek setup`
-- [ ] 6.4 `source use`: reject unknown alias with a list of valid ones
-- [ ] 6.5 `source remove`: delete entry; if removed alias was `defaultSource`, unset `defaultSource` (don't auto-pick a replacement); delete cache dir
-- [ ] 6.6 `source refresh`: single alias or all; bypass cache, refetch + reindex, print summary (operation/schema count, fetch duration) to stderr
-- [ ] 6.7 `source info`: print metadata with header values showing raw `${VAR}` placeholders (never resolved)
-- [ ] 6.8 Implement `src/cli/commands/config.ts` — `config get <dotted.path>`, `config set <dotted.path> <value>` (zod-validated, reject on schema violation without mutating disk), `config path` (print absolute path to stdout)
-- [ ] 6.9 Integration tests: full source lifecycle (add → list → use → refresh → info → remove); duplicate-alias rejection; http:// rejection and `--allow-insecure` opt-in; first-source auto-default; removing default unsets `defaultSource`; per-project `.apeekrc.json` overlay adds a source and overrides default without mutating global file; both project files present → exit 2; missing env var in header → `MissingEnvError`; `source info` never prints resolved secret; `config set` validation failure leaves disk unchanged
+- [x] 6.1 Implement `src/core/source-manager.ts` — `add`, `list`, `use`, `remove`, `refresh`, `info`; writes through zod schema via loader; `remove` also deletes associated cache dir
+- [x] 6.2 Implement `src/cli/commands/source.ts` subcommands wiring — `source add` accepts `--header key=value` (repeatable), `--ttl <seconds>`, `--allow-insecure`; first-added source auto-becomes `defaultSource`; duplicate alias rejected; http:// rejected unless `--allow-insecure`
+- [x] 6.3 `source list`: mark default, include URL/path; empty state points at `apeek source add` / `apeek setup`
+- [x] 6.4 `source use`: reject unknown alias with a list of valid ones
+- [x] 6.5 `source remove`: delete entry; if removed alias was `defaultSource`, unset `defaultSource` (don't auto-pick a replacement); delete cache dir
+- [x] 6.6 `source refresh`: single alias or all; bypass cache, refetch + reindex, print summary (operation/schema count, fetch duration) to stderr
+- [x] 6.7 `source info`: print metadata with header values showing raw `${VAR}` placeholders (never resolved)
+- [x] 6.8 Implement `src/cli/commands/config.ts` — `config get <dotted.path>`, `config set <dotted.path> <value>` (zod-validated, reject on schema violation without mutating disk), `config path` (print absolute path to stdout)
+- [x] 6.9 Integration tests: full source lifecycle (add → list → use → refresh → info → remove); duplicate-alias rejection; http:// rejection and `--allow-insecure` opt-in; first-source auto-default; removing default unsets `defaultSource`; per-project `.apeekrc.json` overlay adds a source and overrides default without mutating global file; both project files present → exit 2; missing env var in header → `MissingEnvError`; `source info` never prints resolved secret; `config set` validation failure leaves disk unchanged
 - [ ] 6.10 Commit: `feat: source and config management`
 
 ## 7. Agent integrations
