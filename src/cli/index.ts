@@ -16,6 +16,8 @@ import { buildSchemaCommand } from "./commands/schema.js";
 import { buildCacheCommand } from "./commands/cache.js";
 import { buildSourceCommand } from "./commands/source.js";
 import { buildConfigCommand } from "./commands/config.js";
+import { buildInstallCommand } from "./commands/install.js";
+import { buildSetupCommand } from "./commands/setup.js";
 
 const MIN_NODE_MAJOR = 20;
 
@@ -93,6 +95,8 @@ program.addCommand(buildSchemaCommand());
 program.addCommand(buildCacheCommand());
 program.addCommand(buildSourceCommand());
 program.addCommand(buildConfigCommand());
+program.addCommand(buildInstallCommand());
+program.addCommand(buildSetupCommand());
 
 program.showHelpAfterError("(run 'apeek --help' for help)");
 program.showSuggestionAfterError(true);

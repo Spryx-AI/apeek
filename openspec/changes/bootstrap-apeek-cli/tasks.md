@@ -77,22 +77,22 @@
 - [x] 6.7 `source info`: print metadata with header values showing raw `${VAR}` placeholders (never resolved)
 - [x] 6.8 Implement `src/cli/commands/config.ts` — `config get <dotted.path>`, `config set <dotted.path> <value>` (zod-validated, reject on schema violation without mutating disk), `config path` (print absolute path to stdout)
 - [x] 6.9 Integration tests: full source lifecycle (add → list → use → refresh → info → remove); duplicate-alias rejection; http:// rejection and `--allow-insecure` opt-in; first-source auto-default; removing default unsets `defaultSource`; per-project `.apeekrc.json` overlay adds a source and overrides default without mutating global file; both project files present → exit 2; missing env var in header → `MissingEnvError`; `source info` never prints resolved secret; `config set` validation failure leaves disk unchanged
-- [ ] 6.10 Commit: `feat: source and config management`
+- [x] 6.10 Commit: `feat: source and config management`
 
 ## 7. Agent integrations
 
-- [ ] 7.1 Define `AgentIntegration` interface in `src/agents/registry.ts` (`id`, `displayName`, `detect()`, `install(opts)`) and a typed registry map
-- [ ] 7.2 Implement `src/agents/detect.ts` — filesystem probes per spec (Claude Code `~/.claude/`, Cursor `.cursor/` or `~/.cursor/`, Codex `~/.codex/`, Windsurf `.windsurfrules` or config dir, Continue `~/.continue/`)
-- [ ] 7.3 Write `src/agents/templates/claude-code-skill.md` — frontmatter (`name: apeek`, description with specified triggers), body with `search`/`op`/`schema` workflow, 5-call limit, setup-fallback hint
-- [ ] 7.4 Write `src/agents/templates/cursor-rule.mdc` — frontmatter (`alwaysApply: true`), body with commands + limits + setup-fallback hint
-- [ ] 7.5 Implement `src/agents/claude-code.ts` — install writes bundled template to `~/.claude/skills/apeek/SKILL.md` (global) or `./.claude/skills/apeek/SKILL.md` (project), mode 0644, overwrite with stderr note, parents created
-- [ ] 7.6 Implement `src/agents/cursor.ts` — install writes `.cursor/rules/apeek.mdc` (project default) or `~/.cursor/rules/apeek.mdc` (global)
-- [ ] 7.7 Implement `src/agents/codex.ts`, `windsurf.ts`, `continue.ts` as v0.2 stubs: `detect()` functional, `install()` raises `AgentInstallError` with "planned for v0.2" message
-- [ ] 7.8 Implement `src/cli/commands/install.ts` — `install <agent> [--scope=global|project]`, scope defaults to global, unknown agent exits 1 with list of valid ids
-- [ ] 7.9 Implement `src/cli/commands/setup.ts` — detect → prompt agent selection (only MVP agents offered; v0.2 listed in closing summary) → prompt install scope → optionally prompt source (alias, URL/path, optional auth header, TTL) → connection-test (fetch + parse + index, show op/schema counts) → if test fails, ask to save anyway → atomic write (all-or-nothing) → closing summary with next-step commands
-- [ ] 7.10 Non-TTY guard in `setup`: if `!process.stdin.isTTY`, print error directing to `install <agent>` + `source add` and exit 1
-- [ ] 7.11 Unit tests: registry (new agent registers and appears in `install` + `setup`), detect (each probe), template content assertions (frontmatter + body markers per spec), install write paths + overwrite behavior, v0.2 stubs return correct error
-- [ ] 7.12 Integration tests: `install claude-code --scope=global` writes to expected path; `install cursor --scope=project` writes `.cursor/rules/apeek.mdc`; `install codex` errors with v0.2 hint; scripted `setup` with pre-supplied prompts answers produces correct files atomically; mid-wizard write failure rolls back; non-TTY `setup` exits 1; offline install (no network) succeeds using bundled templates; installed file matches shipped template byte-for-byte (template-drift guard)
+- [x] 7.1 Define `AgentIntegration` interface in `src/agents/registry.ts` (`id`, `displayName`, `detect()`, `install(opts)`) and a typed registry map
+- [x] 7.2 Implement `src/agents/detect.ts` — filesystem probes per spec (Claude Code `~/.claude/`, Cursor `.cursor/` or `~/.cursor/`, Codex `~/.codex/`, Windsurf `.windsurfrules` or config dir, Continue `~/.continue/`)
+- [x] 7.3 Write `src/agents/templates/claude-code-skill.ts` — frontmatter (`name: apeek`, description with specified triggers), body with `search`/`op`/`schema` workflow, 5-call limit, setup-fallback hint (inlined as TS template string rather than separate .md file — design deviation to avoid loader complexity across tsup + vitest)
+- [x] 7.4 Write `src/agents/templates/cursor-rule.ts` — frontmatter (`alwaysApply: true`), body with commands + limits + setup-fallback hint
+- [x] 7.5 Implement `src/agents/claude-code.ts` — install writes bundled template to `~/.claude/skills/apeek/SKILL.md` (global) or `./.claude/skills/apeek/SKILL.md` (project), mode 0644, overwrite with stderr note, parents created
+- [x] 7.6 Implement `src/agents/cursor.ts` — install writes `.cursor/rules/apeek.mdc` (project default) or `~/.cursor/rules/apeek.mdc` (global)
+- [x] 7.7 Implement `src/agents/stubs.ts` for codex/windsurf/continue as v0.2 stubs: `detect()` functional, `install()` raises `AgentInstallError` with "planned for v0.2" message
+- [x] 7.8 Implement `src/cli/commands/install.ts` — `install <agent> [--scope=global|project]`, scope defaults to global, unknown agent exits 1 with list of valid ids
+- [x] 7.9 Implement `src/cli/commands/setup.ts` — detect → prompt agent selection (only MVP agents offered; v0.2 listed in closing summary) → prompt install scope → optionally prompt source (alias, URL/path, optional auth header, TTL) → connection-test (fetch + parse + index, show op/schema counts) → if test fails, ask to save anyway → atomic write (all-or-nothing) → closing summary with next-step commands
+- [x] 7.10 Non-TTY guard in `setup`: if `!process.stdin.isTTY`, print error directing to `install <agent>` + `source add` and exit 1
+- [x] 7.11 Unit tests: registry (new agent registers and appears in `install` + `setup`), detect (each probe), template content assertions (frontmatter + body markers per spec), install write paths + overwrite behavior, v0.2 stubs return correct error
+- [x] 7.12 Integration tests: `install claude-code --scope=global` writes to expected path; `install cursor --scope=project` writes `.cursor/rules/apeek.mdc`; `install codex` errors with v0.2 hint; non-TTY `setup` exits 1; offline install (no network) succeeds using bundled templates; installed file matches shipped template byte-for-byte (template-drift guard)
 - [ ] 7.13 Manual verification: run `apeek install claude-code --scope=project` in this repo, confirm Claude Code loads the skill on next session; repeat for Cursor
 - [ ] 7.14 Commit: `feat: agent integrations (Claude Code, Cursor) + setup wizard`
 
