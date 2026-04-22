@@ -1,0 +1,29 @@
+tests/fixtures/README.md
+  95178e86404d09d4 1-9
+tests/integration/real-spec.test.ts
+  95178e86404d09d4 1-172
+docs/ARCHITECTURE.md
+  95178e86404d09d4 92-95
+tests/fixtures/openai-openapi.yaml
+  95178e86404d09d4 1-35805
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "df6ef8f7044eac225b5fbba59b978a9940d6dc25",
+  "prompts": {
+    "95178e86404d09d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35ac28c0-7b9f-42ac-b48c-2c9654d860ed",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pedro Cantidio",
+      "messages": [],
+      "total_additions": 35995,
+      "total_deletions": 5,
+      "accepted_lines": 35998,
+      "overriden_lines": 0
+    }
+  }
+}
