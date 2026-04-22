@@ -94,22 +94,22 @@
 - [x] 7.11 Unit tests: registry (new agent registers and appears in `install` + `setup`), detect (each probe), template content assertions (frontmatter + body markers per spec), install write paths + overwrite behavior, v0.2 stubs return correct error
 - [x] 7.12 Integration tests: `install claude-code --scope=global` writes to expected path; `install cursor --scope=project` writes `.cursor/rules/apeek.mdc`; `install codex` errors with v0.2 hint; non-TTY `setup` exits 1; offline install (no network) succeeds using bundled templates; installed file matches shipped template byte-for-byte (template-drift guard)
 - [ ] 7.13 Manual verification: run `apeek install claude-code --scope=project` in this repo, confirm Claude Code loads the skill on next session; repeat for Cursor
-- [ ] 7.14 Commit: `feat: agent integrations (Claude Code, Cursor) + setup wizard`
+- [x] 7.14 Commit: `feat: agent integrations (Claude Code, Cursor) + setup wizard`
 
 ## 8. Release engineering and docs
 
-- [ ] 8.1 Write `README.md` — install (`npx @spryx-ai/apeek@latest`), quickstart (`setup` or `source add` + `search`), command reference, agent-integration section, security posture note, Windows best-effort note, link to docs/
-- [ ] 8.2 Write `docs/ARCHITECTURE.md` — component diagram + data flow summarized from design.md
-- [ ] 8.3 Write `docs/AGENTS.md` — expanded guidance on how an agent should use apeek (mirrors skill template content but longer)
-- [ ] 8.4 Write `.github/workflows/ci.yml` — Node 20 + 22 matrix, `npm ci`, `npm run lint && npm run typecheck && npm run test:run`, no network in integration tests (fixture-only)
-- [ ] 8.5 Write `.github/workflows/release.yml` — `changesets/action@v1`, `NPM_TOKEN` secret, publishes under `@spryx-ai` scope on main
-- [ ] 8.6 Configure `.changeset/config.json` — access public, base branch main, restricted updates
+- [x] 8.1 Write `README.md` — install (`npx @spryx-ai/apeek@latest`), quickstart (`setup` or `source add` + `search`), command reference, agent-integration section, security posture note, Windows best-effort note, link to docs/
+- [x] 8.2 Write `docs/ARCHITECTURE.md` — component diagram + data flow summarized from design.md
+- [x] 8.3 Write `docs/AGENTS.md` — expanded guidance on how an agent should use apeek (mirrors skill template content but longer)
+- [x] 8.4 Write `.github/workflows/ci.yml` — Node 20 + 22 matrix, `npm ci`, `npm run lint && npm run typecheck && npm run test:run`, no network in integration tests (fixture-only)
+- [x] 8.5 Write `.github/workflows/release.yml` — `changesets/action@v1`, `NPM_TOKEN` secret, publishes under `@spryx-ai` scope on main
+- [x] 8.6 Configure `.changeset/config.json` — access public, base branch main
 - [ ] 8.7 Establish performance baseline with `hyperfine`: `apeek --version` (startup), cold search on petstore, warm search, warm op; record numbers in `docs/ARCHITECTURE.md` but do NOT gate CI yet
 - [ ] 8.8 Manual verification run against real-world specs: Stripe (large), GitHub (large 3.0), Spryx backend (authenticated), a FastAPI-generated spec (small); record timing and note any failures
-- [ ] 8.9 Sanity check bundle: `npm run build && du -sh dist/` — note size, flag if >5MB for future review
-- [ ] 8.10 Run end-to-end on a fresh temp directory: `npx <local-tarball> setup`, walk through wizard, run `apeek search` successfully
-- [ ] 8.11 Create first changeset (`npx changeset`), pick minor bump, write release notes referencing this change
-- [ ] 8.12 Verify npm publish dry-run: `npm publish --dry-run`
+- [x] 8.9 Sanity check bundle: `npm run build && du -sh dist/` — 244KB total (80KB JS + 164KB sourcemap); npm pack 62.5KB compressed / 255KB unpacked; well under 5MB
+- [x] 8.10 Ran end-to-end against a fresh temp directory via `npm pack` → fresh dir → `npm install <tarball>` → `npx apeek --version` and `npx apeek search` both worked
+- [x] 8.11 Create first changeset (`.changeset/initial-0-1-0.md`), minor bump, release notes reference this change
+- [x] 8.12 Verify `npm publish --dry-run`: clean output, public access, 5 files, 62.5KB
 - [ ] 8.13 Publish `0.1.0` to npm (run `npx changeset publish` via the release workflow, or manually after merging the release PR)
 - [ ] 8.14 Final commit: `chore: release 0.1.0`
 

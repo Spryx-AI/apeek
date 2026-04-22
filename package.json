@@ -4,7 +4,7 @@
   "description": "OpenAPI context lookup CLI for AI coding agents",
   "type": "module",
   "bin": {
-    "apeek": "./dist/cli/index.js"
+    "apeek": "dist/cli/index.js"
   },
   "files": [
     "dist",
@@ -31,9 +31,15 @@
     "cursor",
     "llm-tooling"
   ],
-  "repository": "github:spryx-ai/apeek",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spryx-ai/apeek.git"
+  },
   "license": "MIT",
   "author": "Spryx AI",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@readme/openapi-parser": "^6.0.1",
     "commander": "^14.0.3",
