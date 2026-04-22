@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { execFileSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -35,7 +35,11 @@ describe("source and config integration", () => {
     join(root, "cfg", "apeek", "config.json");
 
   beforeAll(() => {
-    execFileSync("npm", ["run", "build"], { cwd: REPO_ROOT, stdio: "ignore" });
+    if (!existsSync(CLI)) {
+      throw new Error(
+        `CLI binary missing at ${CLI}. Run 'npm run build' before running integration tests.`,
+      );
+    }
   });
 
   beforeEach(() => {

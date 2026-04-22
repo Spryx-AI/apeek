@@ -1,6 +1,6 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync, mkdirSync, cpSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { existsSync, mkdtempSync, rmSync, writeFileSync, mkdirSync, cpSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -36,7 +36,11 @@ describe("CLI integration", () => {
   let env: NodeJS.ProcessEnv;
 
   beforeAll(() => {
-    execFileSync("npm", ["run", "build"], { cwd: REPO_ROOT, stdio: "ignore" });
+    if (!existsSync(CLI)) {
+      throw new Error(
+        `CLI binary missing at ${CLI}. Run 'npm run build' before running integration tests.`,
+      );
+    }
   });
 
   beforeEach(() => {

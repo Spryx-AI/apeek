@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { execFileSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -32,7 +32,11 @@ describe("install integration", () => {
   let sandbox: string;
 
   beforeAll(() => {
-    execFileSync("npm", ["run", "build"], { cwd: REPO_ROOT, stdio: "ignore" });
+    if (!existsSync(CLI)) {
+      throw new Error(
+        `CLI binary missing at ${CLI}. Run 'npm run build' before running integration tests.`,
+      );
+    }
   });
 
   beforeEach(() => {
