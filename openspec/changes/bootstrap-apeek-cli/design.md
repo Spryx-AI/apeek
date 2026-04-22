@@ -248,7 +248,7 @@ apeek/
 - **vitest** — native ESM/TS, fast watch, snapshot support for formatter tests.
 - **eslint** (flat config) + **prettier** — standard TS rules, `no-console` enforced in `src/cli/commands/` and `src/core/` (must go through `output.ts`), `no-restricted-syntax` to ban string-throws.
 - **changesets** — versioning + CHANGELOG + publish. `@spryx-ai` scope publish handled in release workflow with `NPM_TOKEN` secret.
-- **pnpm** as package manager (lockfile committed).
+- **npm** as package manager (`package-lock.json` committed). pnpm was considered but rejected to keep the toolchain minimal — no corepack prerequisite, no extra shim, and the `npm ci` path is well-supported in every CI runner and contributor environment. Switching to pnpm later is a lockfile migration, not a source change.
 
 ### D16. Performance engineering
 

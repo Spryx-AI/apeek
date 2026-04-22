@@ -1,0 +1,59 @@
+{
+  "name": "@spryx-ai/apeek",
+  "version": "0.1.0",
+  "description": "OpenAPI context lookup CLI for AI coding agents",
+  "type": "module",
+  "bin": {
+    "apeek": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "eslint src tests",
+    "typecheck": "tsc --noEmit",
+    "release": "changeset publish"
+  },
+  "keywords": [
+    "openapi",
+    "cli",
+    "ai-agents",
+    "claude-code",
+    "cursor",
+    "llm-tooling"
+  ],
+  "repository": "github:spryx-ai/apeek",
+  "license": "MIT",
+  "author": "Spryx AI",
+  "dependencies": {
+    "@readme/openapi-parser": "^6.0.1",
+    "commander": "^14.0.3",
+    "js-yaml": "^4.1.1",
+    "kleur": "^4.1.5",
+    "minisearch": "^7.2.0",
+    "prompts": "^2.4.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^25.6.0",
+    "@types/prompts": "^2.4.9",
+    "@typescript-eslint/eslint-plugin": "^8.59.0",
+    "@typescript-eslint/parser": "^8.59.0",
+    "eslint": "^10.2.1",
+    "prettier": "^3.8.3",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}

@@ -1,18 +1,18 @@
 ## 1. Scaffolding
 
-- [ ] 1.1 Run `pnpm init`, set `name: "@spryx-ai/apeek"`, `type: "module"`, `engines.node: ">=20"`, `bin.apeek: "./dist/cli/index.js"`, `files: ["dist","README.md","LICENSE"]`
-- [ ] 1.2 Install runtime deps: `commander`, `@readme/openapi-parser`, `minisearch`, `zod`, `kleur`, `prompts`, `js-yaml`
-- [ ] 1.3 Install dev deps: `typescript`, `tsup`, `vitest`, `eslint`, `@typescript-eslint/*`, `prettier`, `@changesets/cli`, `@types/node`, `@types/prompts`, `@types/js-yaml`
-- [ ] 1.4 Write `tsconfig.json` (strict mode, ESM, Node 20 target, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)
-- [ ] 1.5 Write `tsup.config.ts` targeting `src/cli/index.ts` → `dist/cli/index.js` with shebang, ESM, static-asset inlining for `src/agents/templates/`
-- [ ] 1.6 Write `vitest.config.ts` with coverage reporter, ESM-native
-- [ ] 1.7 Write `eslint.config.js` (flat config): strict TS rules, ban `console.*` in `src/cli/commands/` and `src/core/`, ban string-literal `throw`
-- [ ] 1.8 Write `.prettierrc`
-- [ ] 1.9 Initialize `changesets` (`pnpm changeset init`)
-- [ ] 1.10 Write skeleton `src/cli/index.ts` that prints `apeek --version` via commander and exits 0
-- [ ] 1.11 Write `LICENSE` (MIT) and stub `README.md`
-- [ ] 1.12 Verify `pnpm build && node dist/cli/index.js --version` prints the version
-- [ ] 1.13 Verify local npm linking: `pnpm link --global && apeek --version`
+- [x] 1.1 Run `npm init -y`, then edit `package.json` to set `name: "@spryx-ai/apeek"`, `type: "module"`, `engines.node: ">=20"`, `bin.apeek: "./dist/cli/index.js"`, `files: ["dist","README.md","LICENSE"]`
+- [x] 1.2 Install runtime deps: `npm install commander @readme/openapi-parser minisearch zod kleur prompts js-yaml`
+- [x] 1.3 Install dev deps: `npm install -D typescript tsup vitest eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin prettier @changesets/cli @types/node @types/prompts @types/js-yaml`
+- [x] 1.4 Write `tsconfig.json` (strict mode, ESM, Node 20 target, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)
+- [x] 1.5 Write `tsup.config.ts` targeting `src/cli/index.ts` → `dist/cli/index.js` with shebang, ESM, static-asset inlining for `src/agents/templates/`
+- [x] 1.6 Write `vitest.config.ts` with coverage reporter, ESM-native
+- [x] 1.7 Write `eslint.config.js` (flat config): strict TS rules, ban `console.*` in `src/cli/commands/` and `src/core/`, ban string-literal `throw`
+- [x] 1.8 Write `.prettierrc`
+- [x] 1.9 Initialize changesets (`npx changeset init`)
+- [x] 1.10 Write skeleton `src/cli/index.ts` that prints `apeek --version` via commander and exits 0
+- [x] 1.11 Keep existing `LICENSE` (MIT, already in repo) and stub `README.md` (full README written in task 8.1)
+- [x] 1.12 Verify `npm run build && node dist/cli/index.js --version` prints the version
+- [x] 1.13 Verify local CLI linking: `npm link && apeek --version`
 - [ ] 1.14 Commit: `chore: scaffold apeek project`
 
 ## 2. Foundations: errors, logging, config, env
@@ -101,16 +101,16 @@
 - [ ] 8.1 Write `README.md` — install (`npx @spryx-ai/apeek@latest`), quickstart (`setup` or `source add` + `search`), command reference, agent-integration section, security posture note, Windows best-effort note, link to docs/
 - [ ] 8.2 Write `docs/ARCHITECTURE.md` — component diagram + data flow summarized from design.md
 - [ ] 8.3 Write `docs/AGENTS.md` — expanded guidance on how an agent should use apeek (mirrors skill template content but longer)
-- [ ] 8.4 Write `.github/workflows/ci.yml` — Node 20 + 22 matrix, `pnpm install --frozen-lockfile`, `pnpm lint && pnpm typecheck && pnpm test:run`, no network in integration tests (fixture-only)
+- [ ] 8.4 Write `.github/workflows/ci.yml` — Node 20 + 22 matrix, `npm ci`, `npm run lint && npm run typecheck && npm run test:run`, no network in integration tests (fixture-only)
 - [ ] 8.5 Write `.github/workflows/release.yml` — `changesets/action@v1`, `NPM_TOKEN` secret, publishes under `@spryx-ai` scope on main
 - [ ] 8.6 Configure `.changeset/config.json` — access public, base branch main, restricted updates
 - [ ] 8.7 Establish performance baseline with `hyperfine`: `apeek --version` (startup), cold search on petstore, warm search, warm op; record numbers in `docs/ARCHITECTURE.md` but do NOT gate CI yet
 - [ ] 8.8 Manual verification run against real-world specs: Stripe (large), GitHub (large 3.0), Spryx backend (authenticated), a FastAPI-generated spec (small); record timing and note any failures
-- [ ] 8.9 Sanity check bundle: `pnpm build && du -sh dist/` — note size, flag if >5MB for future review
+- [ ] 8.9 Sanity check bundle: `npm run build && du -sh dist/` — note size, flag if >5MB for future review
 - [ ] 8.10 Run end-to-end on a fresh temp directory: `npx <local-tarball> setup`, walk through wizard, run `apeek search` successfully
-- [ ] 8.11 Create first changeset (`pnpm changeset`), pick minor bump, write release notes referencing this change
-- [ ] 8.12 Verify npm publish dry-run: `pnpm publish --dry-run` from `dist/`
-- [ ] 8.13 Publish `0.1.0` to npm (run `pnpm changeset publish` via the release workflow, or manually after merging the release PR)
+- [ ] 8.11 Create first changeset (`npx changeset`), pick minor bump, write release notes referencing this change
+- [ ] 8.12 Verify npm publish dry-run: `npm publish --dry-run`
+- [ ] 8.13 Publish `0.1.0` to npm (run `npx changeset publish` via the release workflow, or manually after merging the release PR)
 - [ ] 8.14 Final commit: `chore: release 0.1.0`
 
 ## 9. Archive this change
