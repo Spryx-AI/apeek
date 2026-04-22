@@ -1,0 +1,39 @@
+README.md
+  95178e86404d09d4 1-164
+docs/ARCHITECTURE.md
+  95178e86404d09d4 1-120
+docs/AGENTS.md
+  95178e86404d09d4 1-116
+package.json
+  95178e86404d09d4 7,34-37,40-42
+.github/workflows/release.yml
+  95178e86404d09d4 1-48
+openspec/changes/bootstrap-apeek-cli/tasks.md
+  95178e86404d09d4 97,101-106,109-112
+.github/workflows/ci.yml
+  95178e86404d09d4 1-42
+.changeset/config.json
+  95178e86404d09d4 7
+.changeset/initial-0-1-0.md
+  95178e86404d09d4 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "2c70bb04296f1750e2c4ba6d7b586b56336a0e1c",
+  "prompts": {
+    "95178e86404d09d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35ac28c0-7b9f-42ac-b48c-2c9654d860ed",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pedro Cantidio",
+      "messages": [],
+      "total_additions": 529,
+      "total_deletions": 15,
+      "accepted_lines": 537,
+      "overriden_lines": 0
+    }
+  }
+}
