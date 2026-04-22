@@ -17,7 +17,7 @@ The system SHALL expose a single executable named `apeek` that parses command-li
 
 #### Scenario: Binary is invocable via npx
 
-- **WHEN** a user runs `npx @spryx-ai/apeek@latest --version`
+- **WHEN** a user runs `npx @spryx/apeek@latest --version`
 - **THEN** the system prints the current package version and exits with code 0
 
 ### Requirement: Global flags on query commands

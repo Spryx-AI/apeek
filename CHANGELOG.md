@@ -1,4 +1,4 @@
-# @spryx-ai/apeek
+# @spryx/apeek
 
 ## 0.2.0
 

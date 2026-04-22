@@ -8,10 +8,10 @@
 
 ```bash
 # Ad-hoc (preferred for agents)
-npx @spryx-ai/apeek@latest <command>
+npx @spryx/apeek@latest <command>
 
 # Global install
-npm install -g @spryx-ai/apeek
+npm install -g @spryx/apeek
 apeek <command>
 ```
 

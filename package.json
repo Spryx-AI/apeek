@@ -1,5 +1,5 @@
 {
-  "name": "@spryx-ai/apeek",
+  "name": "@spryx/apeek",
   "version": "0.2.0",
   "description": "OpenAPI context lookup CLI for AI coding agents",
   "type": "module",

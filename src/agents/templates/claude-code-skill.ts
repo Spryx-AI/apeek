@@ -61,7 +61,7 @@ apeek search "refund" -s spryx
 - If the first two searches don't find what you need, rephrase with different
   keywords (domain nouns, not verbs like "create" alone).
 - If apeek is not installed or no source is configured, tell the user to run
-  \`npx @spryx-ai/apeek@latest setup\` and stop. Do not try to work around it.
+  \`npx @spryx/apeek@latest setup\` and stop. Do not try to work around it.
 
 ## Common mistakes
 

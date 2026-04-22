@@ -142,7 +142,7 @@ describe("template content", () => {
     expect(claudeCodeSkill).toContain("apeek op");
     expect(claudeCodeSkill).toContain("apeek schema");
     expect(claudeCodeSkill).toContain("more than 5 times");
-    expect(claudeCodeSkill).toContain("npx @spryx-ai/apeek@latest setup");
+    expect(claudeCodeSkill).toContain("npx @spryx/apeek@latest setup");
   });
 
   it("Cursor rule has alwaysApply: true and the three commands", () => {
@@ -151,6 +151,6 @@ describe("template content", () => {
     expect(cursorRule).toContain("apeek op");
     expect(cursorRule).toContain("apeek schema");
     expect(cursorRule).toContain("Max 5 apeek calls");
-    expect(cursorRule).toContain("npx @spryx-ai/apeek@latest setup");
+    expect(cursorRule).toContain("npx @spryx/apeek@latest setup");
   });
 });

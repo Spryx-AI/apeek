@@ -72,7 +72,7 @@ apeek search "refund" -s spryx
 If `apeek` isn't on the PATH, tell the user:
 
 ```
-npx @spryx-ai/apeek@latest setup
+npx @spryx/apeek@latest setup
 ```
 
 Then stop. Don't try to work around it, don't try to read `openapi.json` manually — the whole point of `apeek` is avoiding the token cost of that approach.

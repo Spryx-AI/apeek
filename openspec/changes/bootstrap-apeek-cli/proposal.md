@@ -11,7 +11,7 @@ The gap: there is no mature CLI doing for OpenAPI specs what `ctx7` does for lib
 
 ## What Changes
 
-- **NEW**: `apeek` CLI distributed via npm (`@spryx-ai/apeek`), runnable as `npx @spryx-ai/apeek@latest` or global install. Node ≥20, ESM-only, TypeScript strict.
+- **NEW**: `apeek` CLI distributed via npm (`@spryx/apeek`), runnable as `npx @spryx/apeek@latest` or global install. Node ≥20, ESM-only, TypeScript strict.
 - **NEW**: Query commands — `search <query>`, `op <method> <path>`, `schema <name>` — returning agent-optimized markdown (also `json` / `compact` on demand).
 - **NEW**: Source management — `source add|list|use|remove|refresh|info` with per-source auth headers (env-var interpolated, never persisted as secrets) and cache TTL.
 - **NEW**: Zero-config autodiscovery — walks up from cwd for `openapi.{json,yaml,yml}`, `swagger.*`, `docs/openapi.*`, `api/openapi.*`.
@@ -42,7 +42,7 @@ None — this is a greenfield repository (only `.claude/` and `openspec/` exist 
 - **New repository layout**: `src/{cli,core,config,agents,lib}`, `tests/{unit,integration,fixtures}`, `docs/`, GitHub Actions workflows (`ci.yml`, `release.yml`), changesets config. See `design.md` for the full tree.
 - **Tooling**: TypeScript 5.4+, `tsup` (esbuild) for bundling, `vitest` for tests, `eslint` + `prettier`, `changesets` for versioning/publishing.
 - **Runtime dependencies** (locked in `design.md`): `commander`, `@readme/openapi-parser`, `minisearch`, `zod`, `kleur`, `prompts`, `js-yaml`, native `fetch`. Any addition beyond this list requires approval.
-- **Distribution**: npm under `@spryx-ai` scope; `bin.apeek` → `dist/cli/index.js`; no `postinstall` scripts.
+- **Distribution**: npm under `@spryx` scope; `bin.apeek` → `dist/cli/index.js`; no `postinstall` scripts.
 - **User filesystem writes**: `~/.config/apeek/config.json`, `~/.cache/apeek/`, `~/.claude/skills/apeek/SKILL.md` (or project-local), `.cursor/rules/apeek.mdc`. All creations gated on explicit user action (`setup`, `install`, `source add`).
 - **Security posture**: no telemetry, no auto-update, no postinstall, secrets never persisted, HTTPS enforced for remote sources by default, cache files private to user.
 - **Performance budget** (must hold at v1.0, baseline established in v0.1): startup <150ms; cold search on <100-op spec <3s; warm search <300ms; warm `op` <200ms; 500-op spec index <15MB on disk; build-time memory <300MB. Measured with `hyperfine` against fixture specs.

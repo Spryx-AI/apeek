@@ -164,7 +164,7 @@ The Claude Code skill template SHALL contain frontmatter with `name: apeek` and 
 - **WHEN** the installed `SKILL.md` is inspected
 - **THEN** the body includes fenced command examples for `apeek search`, `apeek op`, and `apeek schema`
 - **AND** includes a "max 5 invocations per user question" guidance line
-- **AND** includes an installation hint (`npx @spryx-ai/apeek@latest setup`) for the case where `apeek` is not yet installed
+- **AND** includes an installation hint (`npx @spryx/apeek@latest setup`) for the case where `apeek` is not yet installed
 
 ### Requirement: Cursor rule template content
 

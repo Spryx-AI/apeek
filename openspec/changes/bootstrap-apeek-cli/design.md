@@ -167,7 +167,7 @@ npm postinstall scripts are widely distrusted and slow on CI. We do nothing on i
 
 ### D13. Naming: `apeek` (renamed from `oapi` during proposal)
 
-The original proposal document used `oapi` throughout. The rename to `apeek` is the single place where our implementation deliberately diverges from the source spec document. Every identifier derived from the name flips: npm package `@spryx-ai/apeek`, binary `apeek`, XDG paths `apeek/`, skill id `apeek`, Cursor rule `apeek.mdc`, per-project files `.apeekrc.json` / `apeek.config.json`, cache dir `~/.cache/apeek/`, config dir `~/.config/apeek/`. No `oapi` string survives in code, config, docs, or templates.
+The original proposal document used `oapi` throughout. The rename to `apeek` is the single place where our implementation deliberately diverges from the source spec document. Every identifier derived from the name flips: npm package `@spryx/apeek`, binary `apeek`, XDG paths `apeek/`, skill id `apeek`, Cursor rule `apeek.mdc`, per-project files `.apeekrc.json` / `apeek.config.json`, cache dir `~/.cache/apeek/`, config dir `~/.config/apeek/`. No `oapi` string survives in code, config, docs, or templates.
 
 ### D14. Repository layout
 
@@ -247,7 +247,7 @@ apeek/
 - **tsup** (esbuild) — single-file bundle, ESM, shebang injected, static assets (templates) inlined.
 - **vitest** — native ESM/TS, fast watch, snapshot support for formatter tests.
 - **eslint** (flat config) + **prettier** — standard TS rules, `no-console` enforced in `src/cli/commands/` and `src/core/` (must go through `output.ts`), `no-restricted-syntax` to ban string-throws.
-- **changesets** — versioning + CHANGELOG + publish. `@spryx-ai` scope publish handled in release workflow with `NPM_TOKEN` secret.
+- **changesets** — versioning + CHANGELOG + publish. `@spryx` scope publish handled in release workflow with `NPM_TOKEN` secret.
 - **npm** as package manager (`package-lock.json` committed). pnpm was considered but rejected to keep the toolchain minimal — no corepack prerequisite, no extra shim, and the `npm ci` path is well-supported in every CI runner and contributor environment. Switching to pnpm later is a lockfile migration, not a source change.
 
 ### D16. Performance engineering
@@ -284,7 +284,7 @@ Tactics:
 
 Not applicable — this is the initial release. No prior `apeek` install exists to migrate from. The only "migration" is Spryx frontend team moving off the OpenAPI MCP server, which is tracked outside this change and requires only installing `apeek` + running `apeek setup`.
 
-Rollback: if v0.1 ships and has a blocking bug, `npm deprecate @spryx-ai/apeek@0.1.0 "use 0.1.1"` and publish a patch. Users running via `npx @spryx-ai/apeek@latest` self-heal on next invocation.
+Rollback: if v0.1 ships and has a blocking bug, `npm deprecate @spryx/apeek@0.1.0 "use 0.1.1"` and publish a patch. Users running via `npx @spryx/apeek@latest` self-heal on next invocation.
 
 ## Open Questions
 

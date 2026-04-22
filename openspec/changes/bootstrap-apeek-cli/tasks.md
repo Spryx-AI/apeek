@@ -1,6 +1,6 @@
 ## 1. Scaffolding
 
-- [x] 1.1 Run `npm init -y`, then edit `package.json` to set `name: "@spryx-ai/apeek"`, `type: "module"`, `engines.node: ">=20"`, `bin.apeek: "./dist/cli/index.js"`, `files: ["dist","README.md","LICENSE"]`
+- [x] 1.1 Run `npm init -y`, then edit `package.json` to set `name: "@spryx/apeek"`, `type: "module"`, `engines.node: ">=20"`, `bin.apeek: "./dist/cli/index.js"`, `files: ["dist","README.md","LICENSE"]`
 - [x] 1.2 Install runtime deps: `npm install commander @readme/openapi-parser minisearch zod kleur prompts js-yaml`
 - [x] 1.3 Install dev deps: `npm install -D typescript tsup vitest eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin prettier @changesets/cli @types/node @types/prompts @types/js-yaml`
 - [x] 1.4 Write `tsconfig.json` (strict mode, ESM, Node 20 target, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)
@@ -98,11 +98,11 @@
 
 ## 8. Release engineering and docs
 
-- [x] 8.1 Write `README.md` — install (`npx @spryx-ai/apeek@latest`), quickstart (`setup` or `source add` + `search`), command reference, agent-integration section, security posture note, Windows best-effort note, link to docs/
+- [x] 8.1 Write `README.md` — install (`npx @spryx/apeek@latest`), quickstart (`setup` or `source add` + `search`), command reference, agent-integration section, security posture note, Windows best-effort note, link to docs/
 - [x] 8.2 Write `docs/ARCHITECTURE.md` — component diagram + data flow summarized from design.md
 - [x] 8.3 Write `docs/AGENTS.md` — expanded guidance on how an agent should use apeek (mirrors skill template content but longer)
 - [x] 8.4 Write `.github/workflows/ci.yml` — Node 20 + 22 matrix, `npm ci`, `npm run lint && npm run typecheck && npm run test:run`, no network in integration tests (fixture-only)
-- [x] 8.5 Write `.github/workflows/release.yml` — `changesets/action@v1`, `NPM_TOKEN` secret, publishes under `@spryx-ai` scope on main
+- [x] 8.5 Write `.github/workflows/release.yml` — `changesets/action@v1`, `NPM_TOKEN` secret, publishes under `@spryx` scope on main
 - [x] 8.6 Configure `.changeset/config.json` — access public, base branch main
 - [ ] 8.7 Establish performance baseline with `hyperfine`: `apeek --version` (startup), cold search on petstore, warm search, warm op; record numbers in `docs/ARCHITECTURE.md` but do NOT gate CI yet
 - [ ] 8.8 Manual verification run against real-world specs: Stripe (large), GitHub (large 3.0), Spryx backend (authenticated), a FastAPI-generated spec (small); record timing and note any failures

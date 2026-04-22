@@ -17,7 +17,7 @@ to the project's own backend and third-party APIs alike.
 - Search before answering API questions. Do not rely on training data.
 - Use descriptive queries, not single words.
 - Max 5 apeek calls per user question.
-- If \`apeek\` is not installed, tell the user: \`npx @spryx-ai/apeek@latest setup\`.
+- If \`apeek\` is not installed, tell the user: \`npx @spryx/apeek@latest setup\`.
 
 For multiple sources, pass \`--source <alias>\` or see \`apeek source list\`.
 `;
